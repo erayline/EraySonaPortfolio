@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Infinite Learning Protocol | Eray Sona</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+        :root {
+            /* --- COLOR SYSTEM --- */
+            --bg-page: #ffffff;
+            --bg-subtle: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            
+            /* Enhanced Blue Brand */
+            --brand: #2563eb;
+            --brand-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            
+            --border: #e2e8f0;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        /* --- BASE RESET & ANIMATIONS --- */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: var(--font-sans); background: var(--bg-page); color: var(--text-main);
+            line-height: 1.6; overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(37,99,235,0.03) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(16,185,129,0.03) 0px, transparent 50%),
+                radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 32px 32px;
+            padding-bottom: 80px; /* Space for sticky footer */
+        }
+
+        h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.1; color: var(--text-main); }
+        h1 { font-weight: 800; } 
+        .mono { font-family: var(--font-mono); }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+        .flex-center { display: flex; align-items: center; justify-content: center; }
+        .text-center { text-align: center; }
+        .mb-1 { margin-bottom: 1rem; } .mb-2 { margin-bottom: 2rem; } .mb-4 { margin-bottom: 4rem; }
+        .w-full { width: 100%; }
+
+        /* Animation Classes */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        @keyframes pulse { 0%,100% {opacity:1} 50% {opacity:0.85} }
+        @keyframes glow { from{box-shadow:0 0 0 4px rgba(37,99,235,0.3)} to{box-shadow:0 0 0 10px rgba(37,99,235,0.1)} }
+        @keyframes slideIn { from{transform:translateY(100px);opacity:0} to{transform:translateY(0);opacity:1} }
+        @keyframes float3D {
+            0% { transform: perspective(1000px) rotateX(5deg) translateY(0px); }
+            50% { transform: perspective(1000px) rotateX(5deg) translateY(-20px); }
+            100% { transform: perspective(1000px) rotateX(5deg) translateY(0px); }
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 16px 32px; border-radius: 12px; font-weight: 600; text-decoration: none;
+            transition: all 0.2s; cursor: pointer; border: none; position: relative; overflow: hidden;
+        }
+        .btn-brand {
+            background: var(--brand-gradient); color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+        .btn-brand:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(37, 99, 235, 0.5); }
+
+        /* --- SCARCITY BAR --- */
+        .scarcity-bar {
+            background: var(--danger); color: white; text-align: center; padding: 14px; 
+            font-size: 1rem; font-weight: 700; animation: pulse 2s infinite;
+        }
+
+        /* --- NAV --- */
+        nav {
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6); padding: 16px 0; 
+            background: rgba(255,255,255,0.7); backdrop-filter: blur(12px);
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        /* --- HERO --- */
+        .hero { padding: 5rem 0 3rem; text-align: center; position: relative; }
+        .hero h1 { 
+            font-size: 4.5rem; margin-bottom: 1.5rem; 
+            background: linear-gradient(180deg, #0f172a 0%, #334155 100%); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        }
+        .hero p { font-size: 1.35rem; color: var(--text-muted); max-width: 640px; margin: 0 auto 2rem; }
+        
+        .hero-visual { margin-top: 3rem; position: relative; }
+        .hero-img { 
+            width: 100%; max-width: 480px; border-radius: var(--radius-md); 
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.25);
+            animation: float3D 6s ease-in-out infinite;
+        }
+
+        /* Social Proof Pill */
+        .social-pill {
+            display: inline-flex; align-items: center; gap: 12px;
+            background: white; padding: 6px 16px 6px 8px; border-radius: 50px; 
+            font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem; 
+            border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .avatar-stack { display: flex; margin-right: -5px; }
+        .avatar-stack img { 
+            width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; 
+            margin-right: -8px; background: #ddd;
+        }
+
+        /* --- MARQUEES --- */
+        .marquee-wrap { overflow: hidden; background: #0f172a; color: white; padding: 18px 0; transform: rotate(-1deg); margin: 2rem 0; }
+        .marquee-content { display: flex; gap: 40px; animation: scroll 25s linear infinite; white-space: nowrap; }
+        .marquee-item { font-family: var(--font-mono); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.9); }
+        
+        .marquee-reviews { background: #f1f5f9; color: var(--text-main); transform: rotate(1deg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-top: -10px; z-index: -1; }
+        .marquee-reviews .marquee-item { color: var(--text-main); font-family: var(--font-sans); text-transform: none; font-weight: 600; }
+        
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* --- STACK LAYOUT --- */
+        .stack-section { padding: 4rem 0; }
+        
+        /* --- PROTOCOL SECTION STYLES --- */
+        .protocol-container {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+        }
+        .protocol-bg-grid {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px),
+            linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.25; z-index: 0;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
+        }
+        .protocol-header { position: relative; z-index: 2; margin-bottom: 3rem; }
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            position: relative;
+            z-index: 2;
+        }
+        .phase-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column;
+        }
+        .phase-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--brand);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.1);
+        }
+        .phase-bg-num {
+            position: absolute; top: -20px; right: -10px;
+            font-family: var(--font-mono); font-size: 8rem; font-weight: 800;
+            color: var(--text-main); opacity: 0.03; line-height: 1;
+            pointer-events: none; z-index: 0;
+        }
+        .phase-icon-box {
+            width: 48px; height: 48px;
+            background: var(--brand-gradient);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; margin-bottom: 1.5rem;
+            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.25);
+            z-index: 1;
+        }
+        .phase-title {
+            font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;
+            color: var(--text-main); z-index: 1;
+        }
+        .phase-desc {
+            font-size: 0.9rem; color: var(--text-muted);
+            margin-bottom: 1.5rem; line-height: 1.5; z-index: 1;
+        }
+        .phase-list { list-style: none; margin-top: auto; z-index: 1; }
+        .phase-list li {
+            font-size: 0.85rem; color: var(--text-main); margin-bottom: 8px;
+            display: flex; align-items: center; gap: 10px; font-weight: 600;
+        }
+        .check-icon {
+            width: 16px; height: 16px; color: var(--success);
+            background: rgba(16, 185, 129, 0.1); border-radius: 50%;
+            padding: 2px; flex-shrink: 0;
+        }
+        @media (min-width: 900px) {
+            .phase-card::after {
+                content: ''; position: absolute; top: 44px; right: -25px;
+                width: 26px; height: 2px;
+                background: repeating-linear-gradient(90deg, var(--border), var(--border) 4px, transparent 4px, transparent 8px);
+                z-index: 10;
+            }
+            .phase-card:last-child::after { display: none; }
+        }
+
+        /* --- SNEAK PEEK / TANGIBLE EVIDENCE (NEW) --- */
+        .peek-container { margin-bottom: 4rem; }
+        .peek-grid {
+            display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; margin-top: 2rem;
+        }
+        @media (max-width: 800px) { .peek-grid { grid-template-columns: 1fr; } }
+
+        .peek-card {
+            background: #f8fafc; border: 1px solid var(--border);
+            border-radius: 16px; overflow: hidden; position: relative;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        .peek-card:hover { transform: translateY(-3px); }
+        .peek-main { height: 400px; display: flex; flex-direction: column; }
+        .peek-sub { height: 188px; display: flex; flex-direction: column; }
+        .peek-right-col { display: flex; flex-direction: column; gap: 24px; }
+        
+        .peek-header {
+            padding: 15px 20px; border-bottom: 1px solid var(--border);
+            background: white; display: flex; justify-content: space-between; align-items: center;
+        }
+        .peek-dots { display: flex; gap: 6px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #e2e8f0; }
+        .dot.red { background: #fecaca; } .dot.yellow { background: #fde68a; } .dot.green { background: #bbf7d0; }
+        
+        /* CSS Mockups */
+        .mock-doc { padding: 30px; background: white; flex-grow: 1; position: relative; }
+        .mock-line { height: 10px; background: #e2e8f0; margin-bottom: 15px; border-radius: 4px; width: 100%; }
+        .mock-line.w-80 { width: 80%; } .mock-line.w-60 { width: 60%; } .mock-line.w-40 { width: 40%; }
+        .mock-line.title { height: 20px; background: #cbd5e1; margin-bottom: 25px; width: 70%; }
+        
+        .mock-obsidian { background: #0f172a; flex-grow: 1; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+        .mock-folder { display: flex; align-items: center; gap: 10px; color: #64748b; font-size: 0.8rem; font-family: var(--font-mono); }
+        .mock-folder.active { color: #a78bfa; background: rgba(167, 139, 250, 0.1); padding: 4px 8px; border-radius: 4px; }
+        
+        .mock-cal { background: white; flex-grow: 1; padding: 15px; display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; align-content: center; }
+        .mock-day { aspect-ratio: 1; background: #f1f5f9; border-radius: 2px; }
+        .mock-day.done { background: #10b981; }
+
+        /* --- GUARANTEE BOX (NEW) --- */
+        .guarantee-box {
+            max-width: 480px; margin: 2rem auto 0;
+            background: #f0fdf4; border: 1px dashed #10b981;
+            padding: 1.5rem; border-radius: 12px;
+            display: flex; gap: 16px; align-items: start;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        .value-badge {
+            background: #dbeafe; color: #1e40af; font-family: var(--font-mono); 
+            font-weight: 700; padding: 4px 12px; border-radius: 4px; font-size: 0.9rem;
+            display: inline-block; margin-bottom: 1rem;
+        }
+        
+        /* Bonuses Grid */
+        .bonuses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; }
+        @media (max-width: 800px) { .bonuses-grid { grid-template-columns: 1fr; } }
+        
+        .bonus-card {
+            background: white; border: 1px dashed var(--border); border-radius: var(--radius-md);
+            padding: 2rem; position: relative; transition: 0.3s;
+        }
+        .bonus-card:hover { border-color: var(--brand); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .bonus-tag {
+            position: absolute; top: -12px; left: 2rem; background: var(--success); color: white;
+            font-weight: 700; font-size: 0.8rem; padding: 4px 12px; border-radius: 4px; letter-spacing: 1px;
+        }
+
+        /* --- OBSIDIAN VISUALIZER --- */
+        .visual-container {
+            height: 120px; position: relative; display: flex; justify-content: center; align-items: center;
+            margin-bottom: 20px; background: #0f172a; /* Dark Obsidian Mode */
+            border-radius: 8px; overflow: hidden; border: 1px solid #334155;
+        }
+        .network-node {
+            width: 10px; height: 10px; background: #a78bfa; border-radius: 50%;
+            position: absolute; box-shadow: 0 0 15px rgba(167, 139, 250, 0.8);
+        }
+        .main-node { left: 50%; top: 50%; transform: translate(-50%, -50%); width: 14px; height: 14px; z-index: 2; background: #fff; }
+        .sat-1 { left: 35%; top: 40%; animation: floatNode 3s infinite ease-in-out; }
+        .sat-2 { left: 65%; top: 30%; animation: floatNode 4s infinite ease-in-out reverse; }
+        .sat-3 { left: 50%; top: 70%; animation: floatNode 5s infinite ease-in-out; }
+        .connection {
+            position: absolute; background: rgba(255,255,255,0.2); height: 1px; transform-origin: left center;
+        }
+        .con-1 { width: 40px; left: 36%; top: 42%; transform: rotate(20deg); }
+        .con-2 { width: 40px; left: 50%; top: 50%; transform: rotate(-45deg); }
+        .con-3 { width: 30px; left: 50%; top: 50%; transform: rotate(90deg); }
+        @keyframes floatNode { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        /* --- AUDIO VISUALIZER --- */
+        .audio-viz { display: flex; gap: 5px; height: 40px; align-items: center; justify-content: center; margin-top: 15px; margin-bottom: 15px; }
+        .bar { width: 6px; background: var(--success); border-radius: 4px; animation: bounce 1s infinite ease-in-out; }
+        @keyframes bounce { 0%, 100% { height: 10px; opacity: 0.6; } 50% { height: 35px; opacity: 1; } }
+        .track-list { margin-top: 10px; font-size: 0.85rem; color: var(--text-muted); }
+        .track-item { display: flex; justify-content: space-between; border-bottom: 1px solid #f1f5f9; padding: 8px 0; }
+        
+        /* --- PRICING RECEIPT --- */
+        .receipt-container { 
+            max-width: 480px; margin: 0 auto; background: white; padding: 2.5rem; 
+            border: 1px solid var(--border); border-radius: 4px; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.1); position: relative; 
+            transform: rotate(1deg); transition: 0.3s;
+        }
+        .receipt-container:hover { transform: rotate(0deg) scale(1.02); }
+        .receipt-container::before {
+            content: ""; position: absolute; top: -10px; left: 0; width: 100%; height: 10px;
+            background: linear-gradient(45deg, transparent 33.333%, white 33.333%, white 66.667%, transparent 66.667%), 
+                        linear-gradient(-45deg, transparent 33.333%, white 33.333%, white 66.667%, transparent 66.667%);
+            background-size: 20px 20px;
+        }
+        .receipt-line { display: flex; justify-content: space-between; margin-bottom: 12px; font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-muted); }
+        .receipt-total { border-top: 2px dashed var(--border); border-bottom: 2px dashed var(--border); padding: 20px 0; margin: 25px 0; font-weight: 800; font-size: 1.4rem; color: var(--text-main); display: flex; justify-content: space-between; }
+
+        /* --- STICKY FOOTER --- */
+        #stickyBuy {
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: var(--brand); color: white; padding: 15px; 
+            text-align: center; z-index: 9998; display: none;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* --- SALES POPUP --- */
+        #salesPopup {
+            position: fixed; bottom: 90px; left: 20px;
+            background: #10b981; color: white; padding: 12px 20px; 
+            border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            z-index: 999; font-weight: 600; font-size: 0.9rem;
+            display: none; align-items: center; gap: 10px;
+            opacity: 0; transition: opacity 0.5s ease-in-out;
+        }
+        #salesPopup.visible { display: flex; opacity: 1; }
+        
+        /* --- EXIT MODAL DESIGN --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); 
+            z-index: 9999; display: none; align-items: center; justify-content: center;
+        }
+        .exit-modal-card {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid #334155;
+            padding: 3rem; border-radius: 20px; max-width: 500px; 
+            text-align: center; position: relative; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease-out;
+            color: white;
+        }
+        .exit-warning-badge {
+            background: #f59e0b; color: #0f172a; 
+            font-weight: 800; font-size: 0.85rem; padding: 6px 16px; 
+            border-radius: 50px; display: inline-block; margin-bottom: 20px;
+            animation: pulse 2s infinite; letter-spacing: 1px;
+        }
+        .exit-price-box {
+            background: rgba(255,255,255,0.05); border: 1px dashed #334155;
+            padding: 20px; border-radius: 12px; margin: 25px 0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* --- MOBILE --- */
+        @media (max-width: 800px) {
+            .hero h1 { font-size: 2.8rem; }
+            .receipt-container { width: 100%; transform: rotate(0); }
+            #salesPopup { display: none; }
+        }
+    </style>
+</head>
+<body id="top">
+
+    <div class="scarcity-bar">
+        ⏰ LAUNCH DEAL ENDS IN <span class="mono" style="letter-spacing:1px;" id="timer">03:44:12</span> – Only 41 spots left at $29
+    </div>
+
+    <nav>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="flex-center" style="gap: 12px; font-weight: 700;">
+                <img src="pp.jpg" alt="Eray Sona" style="width: 32px; height: 32px; border-radius: 50%;">
+                <span>Eray Sona</span>
+            </div>
+            <a href="#pricing" class="btn btn-primary" style="background:black; color:white; font-size: 0.9rem;">Get Protocol</a>
+        </div>
+    </nav>
+
+    <section class="hero reveal">
+        <div class="container">
+            <div class="social-pill">
+                <div class="avatar-stack">
+                    <img src="https://i.pravatar.cc/100?img=1">
+                    <img src="https://i.pravatar.cc/100?img=3">
+                    <img src="https://i.pravatar.cc/100?img=8">
+                </div>
+                <span style="color: var(--success);">●</span> Trusted by the <strong>60,000+ Subscriber</strong> Community
+            </div>
+            
+            <h1>Stop Studying.<br>Start <span style="color: var(--brand);">Architecting</span> Your Brain.</h1>
+            <p>The engineering-grade system to master Code, Math, and Design without burnout.</p>
+            
+            <div style="margin: 3rem 0;">
+                <a href="#pricing" 
+                   class="btn btn-brand" 
+                   style="font-size:1.3rem; padding:20px 40px; box-shadow:0 0 0 4px rgba(37,99,235,0.3); animation:glow 2s infinite alternate;">
+                   YES – Give Me The Protocol for $29
+                </a>
+            </div>
+
+            <div class="hero-visual">
+                <img src="metaebook.png" alt="Infinite Learning Protocol" class="hero-img">
+            </div>
+        </div>
+    </section>
+
+    <div class="marquee-wrap">
+        <div class="marquee-content">
+            <div class="marquee-item"><span data-feather="check"></span> MASTER PYTHON</div>
+            <div class="marquee-item"><span data-feather="check"></span> MASTER CALCULUS</div>
+            <div class="marquee-item"><span data-feather="check"></span> MASTER PIXEL ART</div>
+            <div class="marquee-item"><span data-feather="check"></span> MASTER SPANISH</div>
+            <div class="marquee-item"><span data-feather="check"></span> MASTER ALGORITHMS</div>
+            <div class="marquee-item"><span data-feather="check"></span> MASTER SKETCHING</div>
+            <div class="marquee-item"><span data-feather="check"></span> MASTER FINCANCE</div>
+            <div class="marquee-item"><span data-feather="check"></span> MASTER EXCEL</div>
+            <div class="marquee-item"><span data-feather="check"></span> MASTER SPORTS</div>
+            <div class="marquee-item"><span data-feather="check"></span> MASTER PYTHON</div>
+        </div>
+    </div>
+
+    <div class="marquee-wrap marquee-reviews">
+        <div class="marquee-content" style="animation-direction: reverse;">
+            <div class="marquee-item">★★★★★ “Best $29 I ever spent”</div>
+            <div class="marquee-item">★★★★★ “Learned more in 1 week than 4 years of college”</div>
+            <div class="marquee-item">★★★★★ “My coding speed 3x’d in 14 days”</div>
+            <div class="marquee-item">★★★★★ “Finally a system that works”</div>
+            <div class="marquee-item">★★★★★ “Obsidian templates are gold”</div>
+        </div>
+    </div>
+
+    <section class="stack-section">
+        <div class="container">
+            
+            <div class="text-center mb-4 reveal">
+                <span style="background: #eff6ff; color: #2563eb; font-weight: 700; font-size: 0.8rem; padding: 6px 16px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #dbeafe;">
+                    📦 Complete Bundle Access
+                </span>
+                <h2 style="font-size: 2.5rem; margin: 20px 0 10px;">Here Is Exactly What You Get</h2>
+                <div style="font-size: 1.2rem; color: var(--text-muted);">
+                    Total Value: <span style="text-decoration: line-through; opacity: 0.6; margin-right: 8px;">$357</span>
+                    <span style="color: #cbd5e1; margin-right: 8px;">&rarr;</span>
+                    <span style="color: var(--success); font-weight: 700; font-size: 1.4rem; text-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);">Yours today for $29</span>
+                </div>
+            </div>
+
+            <div class="protocol-container reveal">
+                <div class="protocol-bg-grid"></div>
+                
+                <div class="protocol-header">
+                    <div class="value-badge">ITEM 01 — THE CORE SYSTEM</div>
+                    <h3>The Infinite Learning Protocol</h3>
+                    <p style="color: var(--text-muted); max-width: 600px;">
+                        An engineering-grade system split into three sequential phases. This is the exact algorithm used to master complex topics in record time.
+                    </p>
+                </div>
+            
+                <div class="protocol-grid">
+                    
+                    <div class="phase-card">
+                        <div class="phase-bg-num">01</div>
+                        <div class="phase-icon-box">
+                            <span data-feather="cpu"></span>
+                        </div>
+                        <div class="phase-title">Phase I: Hardware</div>
+                        <p class="phase-desc">Before software (knowledge) can run, the hardware (brain) must be optimized for neuroplasticity.</p>
+                        <ul class="phase-list">
+                            <li><span data-feather="check" class="check-icon"></span> Dopamine Detox Protocol</li>
+                            <li><span data-feather="check" class="check-icon"></span> Sleep & Theta Waves</li>
+                            <li><span data-feather="check" class="check-icon"></span> The "Flow State" Trigger</li>
+                        </ul>
+                    </div>
+            
+                    <div class="phase-card">
+                        <div class="phase-bg-num">02</div>
+                        <div class="phase-icon-box">
+                            <span data-feather="layers"></span>
+                        </div>
+                        <div class="phase-title">Phase II: Compression</div>
+                        <p class="phase-desc">Stop memorizing. Start encoding. Use lossy compression algorithms to store vast data efficiently.</p>
+                        <ul class="phase-list">
+                            <li><span data-feather="check" class="check-icon"></span> The Feynman Loop</li>
+                            <li><span data-feather="check" class="check-icon"></span> Spatial Memory Palaces</li>
+                            <li><span data-feather="check" class="check-icon"></span> Analogical Mapping</li>
+                        </ul>
+                    </div>
+            
+                    <div class="phase-card">
+                        <div class="phase-bg-num">03</div>
+                        <div class="phase-icon-box">
+                            <span data-feather="zap"></span>
+                        </div>
+                        <div class="phase-title">Phase III: Execution</div>
+                        <p class="phase-desc">Move from passive theory to active mastery. Crossing the "Tutorial Hell" gap permanently.</p>
+                        <ul class="phase-list">
+                            <li><span data-feather="check" class="check-icon"></span> Project-Based Injection</li>
+                            <li><span data-feather="check" class="check-icon"></span> The 48-Hour Rule</li>
+                            <li><span data-feather="check" class="check-icon"></span> Iterative Failure Loops</li>
+                        </ul>
+                    </div>
+            
+                </div>
+            </div>
+
+            <div class="peek-container reveal">
+                <div class="text-center mb-1">
+                    <h3 style="font-size: 1.8rem;">Inside The Archive</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">No fluff. Just the raw files, templates, and systems you need.</p>
+                </div>
+
+                <div class="peek-grid">
+                    <div class="peek-card peek-main">
+                        <div class="peek-header">
+                            <span class="mono" style="font-size: 0.8rem; color: #64748b;">infinite_protocol_v2.pdf</span>
+                            <div class="peek-dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                        </div>
+                        <div class="mock-doc">
+                            <div class="mock-line title"></div>
+                            <div class="mock-line w-80"></div>
+                            <div class="mock-line w-60"></div>
+                            <div class="mock-line w-40"></div>
+                            <br>
+                            <div class="mock-line title" style="width: 50%;"></div>
+                            <div class="mock-line w-80"></div>
+                            <div class="mock-line w-60"></div>
+                            <div class="mock-line w-80"></div>
+                            <div class="mock-line w-40"></div>
+                            <div style="position: absolute; bottom: 30px; right: 30px; opacity: 0.1;">
+                                <span data-feather="book-open" style="width: 80px; height: 80px; color: var(--text-main);"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="peek-right-col">
+                        <div class="peek-card peek-sub">
+                            <div class="peek-header" style="background: #1e293b; border-bottom: 1px solid #334155;">
+                                <span class="mono" style="font-size: 0.8rem; color: #94a3b8;">Obsidian Vault</span>
+                                <div class="peek-dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                            </div>
+                            <div class="mock-obsidian">
+                                <div class="mock-folder"><span data-feather="folder" style="width:12px;"></span> 00_Inbox</div>
+                                <div class="mock-folder active"><span data-feather="folder" style="width:12px;"></span> 01_Protocol</div>
+                                <div class="mock-folder" style="padding-left: 20px;">└ Algorithms.md</div>
+                                <div class="mock-folder" style="padding-left: 20px;">└ Mental_Models.md</div>
+                                <div class="mock-folder"><span data-feather="folder" style="width:12px;"></span> 02_Resources</div>
+                            </div>
+                        </div>
+
+                        <div class="peek-card peek-sub">
+                            <div class="peek-header">
+                                <span class="mono" style="font-size: 0.8rem; color: #64748b;">90_Day_Map.csv</span>
+                            </div>
+                            <div class="mock-cal">
+                                <div class="mock-day done"></div><div class="mock-day done"></div><div class="mock-day done"></div><div class="mock-day done"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div>
+                                <div class="mock-day done"></div><div class="mock-day done"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div>
+                                <div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div>
+                                <div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-center mb-2 reveal">Plus 4 Free Bonuses</h3>
+
+            <div class="bonuses-grid">
+                
+                <div class="bonus-card reveal">
+                    <div class="bonus-tag">FREE</div>
+                    
+                    <div class="visual-container">
+                        <div class="network-node main-node"></div>
+                        <div class="network-node sat-1"></div>
+                        <div class="network-node sat-2"></div>
+                        <div class="network-node sat-3"></div>
+                        <div class="connection con-1"></div>
+                        <div class="connection con-2"></div>
+                        <div class="connection con-3"></div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                        <h4 style="margin:0;">Plug & Play Second Brain Vault</h4>
+                        <span class="mono" style="color: var(--text-muted); text-decoration: line-through;">$67.00</span>
+                    </div>
+
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;">
+                        My exact Obsidian vault exported as a .zip. Includes folder structures, tag systems, and templates. Just unzip and start.
+                    </p>
+
+                    <div class="community-proof" style="margin-top: 15px; font-size: 0.8rem; color: #64748b; background: #f1f5f9; padding: 8px; border-radius: 6px; display:inline-block;">
+                        <span data-feather="youtube" style="width: 14px; color: #ef4444; vertical-align: middle;"></span> 
+                        Trusted by the <strong>60,000+ Subscribers</strong> community
+                    </div>
+                </div>
+
+                <div class="bonus-card reveal" style="transition-delay: 0.1s;">
+                    <div class="bonus-tag">FREE</div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                        <span data-feather="headphones" style="width: 32px; height: 32px; color: var(--text-main);"></span>
+                        <span class="mono" style="color: var(--text-muted); text-decoration: line-through;">$47.00</span>
+                    </div>
+                    <h4>Deep Focus Gamma Audio Pack</h4>
+                    
+                    <div class="audio-viz">
+                        <div class="bar" style="animation-delay: 0s"></div>
+                        <div class="bar" style="animation-delay: 0.1s"></div>
+                        <div class="bar" style="animation-delay: 0.2s"></div>
+                        <div class="bar" style="animation-delay: 0.3s"></div>
+                        <div class="bar" style="animation-delay: 0.4s"></div>
+                        <div class="bar" style="animation-delay: 0.5s"></div>
+                        <div class="bar" style="animation-delay: 0.2s"></div>
+                    </div>
+                    
+                    <div class="track-list">
+                        <div class="track-item"><span>01. 40Hz Gamma + Brown Noise</span><span class="mono">60m</span></div>
+                        <div class="track-item"><span>02. 40Hz Gamma + Rain</span><span class="mono">60m</span></div>
+                        <div class="track-item"><span>03. 40Hz + Alpha-Theta Blend</span><span class="mono">60m</span></div>
+                        <div class="track-item" style="color: var(--brand);">+ 3 More Tracks...</div>
+                    </div>
+                </div>
+
+                <div class="bonus-card reveal" style="transition-delay: 0.2s;">
+                    <div class="bonus-tag">FREE</div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                        <span data-feather="calendar" style="width: 32px; height: 32px; color: var(--text-main);"></span>
+                        <span class="mono" style="color: var(--text-muted); text-decoration: line-through;">$57.00</span>
+                    </div>
+                    <h4>90-Day Skill Mastery Calendar</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;">
+                        A printable PDF and Markdown calendar with daily tasks. Keeps you accountable for 3 months of deep learning.
+                    </p>
+                </div>
+
+                <div class="bonus-card reveal" style="transition-delay: 0.3s;">
+                    <div class="bonus-tag">FREE</div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                        <span data-feather="cpu" style="width: 32px; height: 32px; color: var(--text-main);"></span>
+                        <span class="mono" style="color: var(--text-muted); text-decoration: line-through;">$39.00</span>
+                    </div>
+                    <h4>Brain Upgrade Stack 2025</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;">
+                        A curated list of my personal hardware, supplements, and software stack with configuration screenshots.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="container" style="padding: 2rem 24px 8rem;" id="pricing">
+        <div class="text-center mb-4 reveal">
+            <h2>Secure Your Access</h2>
+            <p style="color: var(--text-muted);">One time payment. Lifetime updates.</p>
+        </div>
+
+        <div class="receipt-container reveal">
+            <div class="text-center mb-2">
+                <div style="font-weight: 800; font-size: 1.3rem;">ERAY SONA DIGITAL</div>
+                <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">ORDER #9921-X</div>
+            </div>
+
+            <div class="receipt-line">
+                <span>Infinite Protocol (3-Part System)</span>
+                <span>$147.00</span>
+            </div>
+            <div class="receipt-line">
+                <span>Bonus: Second Brain Vault</span>
+                <span>$0.00 <span style="text-decoration: line-through; opacity: 0.5;">$67</span></span>
+            </div>
+            <div class="receipt-line">
+                <span>Bonus: Gamma Audio Pack</span>
+                <span>$0.00 <span style="text-decoration: line-through; opacity: 0.5;">$47</span></span>
+            </div>
+            <div class="receipt-line">
+                <span>Bonus: 90-Day Calendar</span>
+                <span>$0.00 <span style="text-decoration: line-through; opacity: 0.5;">$57</span></span>
+            </div>
+            <div class="receipt-line">
+                <span>Bonus: Brain Upgrade Stack</span>
+                <span>$0.00 <span style="text-decoration: line-through; opacity: 0.5;">$39</span></span>
+            </div>
+            
+            <div class="receipt-line" style="color:#10b981; font-weight:700; margin-top: 15px;">
+                <span>Total Value</span>
+                <span style="text-decoration: line-through;">$357.00</span>
+            </div>
+
+            <div class="receipt-total">
+                <span>YOU PAY</span>
+                <span>$29.00</span>
+            </div>
+
+            <a href="https://eraysona.lemonsqueezy.com/buy/6af5f320-5d9a-4a6c-b40d-a97515c841f3" class="btn btn-brand w-full" style="font-size: 1.1rem;">Instant Download ($29)</a>
+
+            <div style="margin-top:12px; font-size:0.85rem; color:#ef4444; font-weight:700; text-align: center;">
+                ⏰ This discounted link expires in <span id="miniTimer" class="mono">14:59</span>
+            </div>
+
+            <div class="text-center mt-4" style="font-size: 0.75rem; color: var(--text-muted);">
+                <div style="margin-top: 15px; display: flex; justify-content: center; gap: 8px; align-items: center;">
+                    <span data-feather="lock" style="width: 12px;"></span> 256-Bit SSL Encrypted Payment
+                </div>
+            </div>
+        </div>
+
+        <div class="guarantee-box reveal">
+            <span data-feather="shield" style="width: 32px; height: 32px; color: #10b981; flex-shrink: 0;"></span>
+            <div>
+                <h4 style="margin: 0 0 5px; font-size: 1rem; color: #064e3b;">30-Day Money Back Guarantee</h4>
+                <p style="font-size: 0.85rem; color: #065f46; line-height: 1.5; margin: 0;">
+                    If you don't feel like you've downloaded $290 worth of value, just reply to the email and I'll refund you. No questions asked.
+                </p>
+            </div>
+        </div>
+
+    </section>
+
+    <footer style="padding: 3rem 0; text-align: center; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); background: var(--bg-subtle);">
+        <p>&copy; 2025 Eray Sona. Istanbul.</p>
+    </footer>
+
+    <div id="stickyBuy">
+        <a href="https://eraysona.lemonsqueezy.com/buy/6af5f320-5d9a-4a6c-b40d-a97515c841f3" style="color:white; font-size:1.1rem; font-weight:700; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 10px;">
+            ⚡ Get The $357 Bundle for Just $29
+        </a>
+    </div>
+
+    <div id="salesPopup">
+        </div>
+
+    <div class="modal-overlay" id="exitModal">
+        <div class="exit-modal-card">
+            <div style="position: absolute; top: 20px; right: 20px; cursor: pointer; color: #94a3b8; font-size: 1.2rem;" onclick="document.getElementById('exitModal').style.display='none'">✕</div>
+            
+            <div class="exit-warning-badge">⚠️ WAIT!</div>
+            
+            <h2 style="font-size: 2rem; color: white; margin-bottom: 0.5rem; line-height: 1.1;">Don't leave empty handed.</h2>
+            <p style="color: #94a3b8; font-size: 1.1rem; margin-top: 10px;">
+                You are about to miss the <span style="color: #10b981; font-weight: bold;">$357 Bundle Offer</span>.
+            </p>
+
+            <div class="exit-price-box">
+                <div style="text-align: left;">
+                    <div style="font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Regular Price</div>
+                    <div style="font-size: 1.2rem; color: #64748b; text-decoration: line-through; font-family: var(--font-mono);">$357.00</div>
+                </div>
+                <div style="font-size: 2rem; color: white;">&rarr;</div>
+                <div style="text-align: right;">
+                    <div style="font-size: 0.8rem; color: #10b981; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">One-Time Offer</div>
+                    <div style="font-size: 2rem; color: #10b981; font-weight: 800;">$29.00</div>
+                </div>
+            </div>
+
+            <a href="#pricing" class="btn btn-brand w-full" style="font-size: 1.2rem; padding: 20px;" onclick="document.getElementById('exitModal').style.display='none'">Claim Discount Now</a>
+            
+            <div style="margin-top: 15px; font-size: 0.8rem; color: #64748b;">
+                Offer expires when you close this page.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        feather.replace();
+
+        // 1. TIME-BASED SOCIAL PROOF LOGIC (REALISTIC)
+        function showViewerNotification() {
+            const notification = document.getElementById('salesPopup');
+            if (!notification) return;
+
+            // Get current date and hour
+            const now = new Date();
+            const hour = now.getHours();
+            
+            // Create a "realistic" number based on the time of day (Peak hours = more viewers)
+            // This formula ensures the number stays the same for everyone during that specific hour
+            let baseViewers = 101; 
+            if (hour >= 18 && hour <= 23) baseViewers = 550; // Peak evening time
+            else if (hour >= 9 && hour < 18) baseViewers = 350; // Work hours
+            
+            // Add a slight variance based on the date so it changes slightly day-to-day
+            const variance = (now.getDate() * 3) + hour;
+            const count = baseViewers + variance;
+
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: #fff; width: 8px; height: 8px; border-radius: 50%; display: inline-block; box-shadow: 0 0 5px #fff;"></span>
+                    <span style="font-size: 0.9rem; color: #fff;">
+                        <strong>${count} people</strong> are viewing this page
+                    </span>
+                </div>
+            `;
+
+            // Only show it once per session to avoid annoyance
+            if (!sessionStorage.getItem('notificationShown')) {
+                setTimeout(() => {
+                    notification.classList.add('visible');
+                    sessionStorage.setItem('notificationShown', 'true');
+                }, 3000); // Wait 3 seconds before showing
+                
+                // Hide it after 10 seconds
+                setTimeout(() => {
+                    notification.classList.remove('visible');
+                }, 13000);
+            }
+        }
+        
+        // Run notification logic
+        document.addEventListener('DOMContentLoaded', showViewerNotification);
+
+        // 2. Main Scarcity Timer
+        const startTimer = (duration, display) => {
+            let timer = duration, hours, minutes, seconds;
+            setInterval(() => {
+                hours = parseInt(timer / 3600, 10);
+                minutes = parseInt((timer % 3600) / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+                hours = hours < 10 ? "0" + hours : hours;
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                if(display) display.textContent = hours + ":" + minutes + ":" + seconds;
+                if (--timer < 0) timer = duration;
+            }, 1000);
+        }
+        window.onload = () => startTimer(13452, document.querySelector('#timer'));
+
+        // 3. Mini Countdown
+        let m = 14*60 + 59;
+        setInterval(() => {
+            let min = String(Math.floor(m/60)).padStart(2,'0');
+            let sec = String(m%60).padStart(2,'0');
+            const el = document.getElementById('miniTimer');
+            if(el) el.textContent = min+":"+sec;
+            
+            if (m > 0) {
+                m--;
+            } else {
+                m = 0; 
+            }
+        }, 1000);
+
+        // 4. Sticky Header Logic
+        window.onscroll = function() {
+            if (window.scrollY > 600) {
+                document.getElementById("stickyBuy").style.display = "block";
+            } else {
+                document.getElementById("stickyBuy").style.display = "none";
+            }
+        };
+
+        // 5. Scroll Reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        // 6. Exit Intent
+        let modalShown = false;
+        document.addEventListener('mouseleave', e => {
+            if (e.clientY < 0 && !modalShown) {
+                document.getElementById('exitModal').style.display = 'flex';
+                modalShown = true;
+            }
+        });
+    </script>
+</body>
+</html>

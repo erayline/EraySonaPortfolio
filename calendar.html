@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Protocol 90: System Architecture</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #000000;
+            --dark: #1e293b;
+            --gray: #94a3b8;
+            --light: #e2e8f0;
+            --paper: #ffffff;
+        }
+
+        * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
+        
+        body { 
+            margin: 0; padding: 20px; 
+            background: #333; 
+            font-family: 'Inter', sans-serif;
+            display: flex; justify-content: center;
+        }
+
+        .sheet {
+            width: 210mm;
+            height: 297mm;
+            background: var(--paper);
+            padding: 12mm;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- HEADER: TECHNICAL SPECS --- */
+        header {
+            border-bottom: 3px solid var(--black);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 26pt;
+            letter-spacing: -1.5px;
+            margin: 0;
+            line-height: 0.9;
+        }
+        
+        .sub-head {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9pt;
+            color: var(--black);
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .specs {
+            text-align: right;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8pt;
+            line-height: 1.4;
+        }
+
+        /* --- THE CIRCUIT GRID (90 DAYS) --- */
+        .circuit-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .phase-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8pt;
+            font-weight: 800;
+            background: var(--black);
+            color: white;
+            padding: 4px 8px;
+            display: inline-block;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .grid-row {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .node {
+            aspect-ratio: 1;
+            border: 1.5px solid var(--dark);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10pt;
+            color: var(--gray);
+            transition: all 0.2s;
+        }
+
+        /* The "Chain" Connector Lines */
+        .node::after {
+            content: '';
+            position: absolute;
+            right: -12px;
+            top: 50%;
+            width: 12px;
+            height: 1.5px;
+            background: var(--light);
+            z-index: 1;
+        }
+        .node:last-child::after { display: none; } /* No line after last node in row */
+        .node:nth-child(10)::after { display: none; } 
+
+        .node small {
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            font-size: 6pt;
+            color: var(--black);
+        }
+
+        /* --- SYSTEM MODULES (WEEKLY HABITS) --- */
+        .modules-section {
+            border-top: 3px solid var(--black);
+            padding-top: 15px;
+            margin-top: auto;
+        }
+
+        .modules-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 10pt;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 20px;
+            row-gap: 8px;
+        }
+
+        .module-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px dashed var(--light);
+            padding-bottom: 4px;
+            padding-top: 4px;
+        }
+
+        .module-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 8pt;
+            background: var(--light);
+            padding: 2px 5px;
+            margin-right: 10px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .module-name {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 9pt;
+            margin-right: 5px;
+        }
+
+        .module-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 8pt;
+            color: #555;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            margin-top: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 7pt;
+            text-align: center;
+            color: var(--gray);
+            border: 1px solid var(--black);
+            padding: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* PRINT MEDIA QUERY */
+        @media print {
+            body { background: white; padding: 0; }
+            .sheet { width: 100%; height: 100%; box-shadow: none; padding: 0; margin: 0; }
+            .node { -webkit-print-color-adjust: exact; border-color: black; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sheet">
+        <header>
+            <div>
+                <h1>PROTOCOL 90</h1>
+                <div class="sub-head">NEURAL ARCHITECTURE BLUEPRINT v3.0</div>
+            </div>
+            <div class="specs">
+                OPERATOR: ___________________<br>
+                START DATE: _________________<br>
+                OBJECTIVE: __________________
+            </div>
+        </header>
+
+        <div class="circuit-container">
+            
+            <div>
+                <div class="phase-label">PHASE 1: HARDWARE INIT (BODY)</div>
+                <div class="grid-row">
+                    <script>
+                        for(let i=1; i<=30; i++) {
+                            document.write(`<div class="node"><small>${i}</small></div>`);
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <div style="margin-top:10px;">
+                <div class="phase-label" style="background:white; color:black; border:1px solid black;">PHASE 2: SOFTWARE FLASH (MIND)</div>
+                <div class="grid-row">
+                    <script>
+                        for(let i=31; i<=60; i++) {
+                            document.write(`<div class="node"><small>${i}</small></div>`);
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <div style="margin-top:10px;">
+                <div class="phase-label" style="background:white; color:black; border:1px solid black;">PHASE 3: SYSTEM OVERCLOCK (OUTPUT)</div>
+                <div class="grid-row">
+                    <script>
+                        for(let i=61; i<=90; i++) {
+                            document.write(`<div class="node"><small>${i}</small></div>`);
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <div class="modules-section">
+            <div class="modules-header">
+                <span>Weekly Installation Log</span>
+                <span>STATUS: [ ] ACTIVE</span>
+            </div>
+            
+            <div class="modules-grid">
+                <div>
+                    <div class="module-item">
+                        <div class="module-id">WK 01</div>
+                        <div><span class="module-name">Bio-Rhythm</span> <span class="module-desc">Hydrate 500ml upon waking. Sleep consistent.</span></div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-id">WK 02</div>
+                        <div><span class="module-name">Movement</span> <span class="module-desc">Morning sprint/walk (20m) to spike BDNF.</span></div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-id">WK 03</div>
+                        <div><span class="module-name">Dopamine</span> <span class="module-desc">Detox cheap thrills. Earn your breaks.</span></div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-id">WK 04</div>
+                        <div><span class="module-name">Environment</span> <span class="module-desc">Zero clutter. Phone in other room.</span></div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-id">WK 05</div>
+                        <div><span class="module-name">Deep Work</span> <span class="module-desc">50min Focus / 10min Rest cycles.</span></div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-id">WK 06</div>
+                        <div><span class="module-name">Feynman</span> <span class="module-desc">Summarize everything simply.</span></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="module-item">
+                        <div class="module-id">WK 07</div>
+                        <div><span class="module-name">Visuals</span> <span class="module-desc">Image Streaming. Visualize concepts.</span></div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-id">WK 08</div>
+                        <div><span class="module-name">Analogies</span> <span class="module-desc">Connect new ideas to old knowledge.</span></div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-id">WK 09</div>
+                        <div><span class="module-name">Socratic</span> <span class="module-desc">Question your own logic daily.</span></div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-id">WK 10</div>
+                        <div><span class="module-name">Optimization</span> <span class="module-desc">Apply 80/20 Rule. Cut the fluff.</span></div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-id">WK 11</div>
+                        <div><span class="module-name">Deadlines</span> <span class="module-desc">Shorten timelines. Force completion.</span></div>
+                    </div>
+                    <div class="module-item">
+                        <div class="module-id">WK 12</div>
+                        <div><span class="module-name">Shipping</span> <span class="module-desc">Release the project. No perfectionism.</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Mark an 'X' daily. Do not break the chain. If chain breaks, restart module.
+        </div>
+
+    </div>
+
+</body>
+</html>
