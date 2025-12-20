@@ -13,7 +13,7 @@
     <style>
         :root {
             /* --- TEAL BRAND SYSTEM --- */
-            --bg-page: #0f172a; /* Dark Slate Background for Premium Feel */
+            --bg-page: #0f172a; /* Dark Slate Background */
             --bg-card: #1e293b;
             --text-main: #f1f5f9;
             --text-muted: #94a3b8;
@@ -40,8 +40,9 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; font-size: 16px; }
         body {
-            font-family: var(--font-sans); background: var(--bg-page); color: var(--text-main);
+            font-family: var(--font-sans); background-color: var(--bg-page); color: var(--text-main);
             line-height: 1.6; overflow-x: hidden;
+            /* THE GRID BACKGROUND - NOW PERSISTENT */
             background-image: 
                 radial-gradient(at 0% 0%, rgba(20, 184, 166, 0.15) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(15, 118, 110, 0.15) 0px, transparent 50%),
@@ -49,6 +50,12 @@
                 linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
             background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
             padding-bottom: 80px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Dark Mode Specific Tweaks (Toggled via JS Class) */
+        body.dark-mode {
+            --bg-page: #020617; /* Even darker for 'Dark Mode' feel */
         }
 
         h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.1; color: white; }
@@ -67,7 +74,6 @@
         
         @keyframes pulse { 0%,100% {opacity:1} 50% {opacity:0.85} }
         @keyframes glow { from{box-shadow:0 0 0 4px rgba(20, 184, 166, 0.3)} to{box-shadow:0 0 0 10px rgba(20, 184, 166, 0.1)} }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
 
         /* --- BUTTONS --- */
         .btn {
@@ -107,7 +113,7 @@
         }
         .hero p { font-size: 1.35rem; color: var(--text-muted); max-width: 640px; margin: 0 auto 2rem; }
         
-        /* THE TOGGLE SWITCH FOR IMAGES */
+        /* THE TOGGLE SWITCH */
         .mode-toggle-container {
             display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;
             background: rgba(255,255,255,0.05); padding: 5px; border-radius: 50px; display: inline-flex;
@@ -128,12 +134,47 @@
             box-shadow: 0 20px 100px -20px rgba(20, 184, 166, 0.25);
             transition: opacity 0.5s ease;
         }
-        #heroImageDark { display: none; } /* Hidden by default */
+        #heroImageDark { display: none; } 
 
-        /* --- MARQUEE --- */
-        .marquee-wrap { overflow: hidden; background: #020617; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 18px 0; transform: rotate(-1deg); margin: 3rem 0; }
-        .marquee-content { display: flex; gap: 50px; animation: scroll 30s linear infinite; white-space: nowrap; }
+        /* --- CROSS MARQUEE --- */
+        .marquee-stack {
+            position: relative;
+            height: 120px; /* Reduced height to keep them tight */
+            margin: 4rem 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .marquee-wrap { 
+            position: absolute;
+            width: 120%;
+            background: #020617; 
+            border-top: 1px solid var(--border); 
+            border-bottom: 1px solid var(--border); 
+            padding: 12px 0; 
+            left: -10%;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .marquee-1 {
+            transform: rotate(-2.5deg);
+            z-index: 2;
+        }
+        
+        .marquee-2 {
+            transform: rotate(2.5deg);
+            z-index: 1;
+            background: #0f172a; /* Slightly lighter bg for contrast */
+        }
+
+        .marquee-content { display: flex; gap: 50px; white-space: nowrap; }
+        .scroll-left { animation: scroll 30s linear infinite; }
+        .scroll-right { animation: scroll 30s linear infinite reverse; }
+
         .marquee-item { font-family: var(--font-mono); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; color: var(--brand); display: flex; align-items: center; gap: 10px; }
+        
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         /* --- FEATURE GRIDS --- */
@@ -161,7 +202,7 @@
 
         /* --- PRICING SECTION --- */
         .pricing-section {
-            background: linear-gradient(180deg, var(--bg-page) 0%, #020617 100%);
+            background: linear-gradient(180deg, transparent 0%, #020617 100%);
             padding: 5rem 0;
             position: relative;
         }
@@ -205,6 +246,7 @@
             .feature-grid { grid-template-columns: 1fr; direction: ltr !important; }
             .feature-text { text-align: left; margin-bottom: 20px; }
             #salesPopup { display: none; }
+            .marquee-stack { height: 100px; }
         }
     </style>
 </head>
@@ -253,15 +295,28 @@
         </div>
     </section>
 
-    <div class="marquee-wrap">
-        <div class="marquee-content">
-            <div class="marquee-item"><span data-feather="trending-up"></span> TRACK NET WORTH</div>
-            <div class="marquee-item"><span data-feather="pie-chart"></span> AUTOMATED REPORTS</div>
-            <div class="marquee-item"><span data-feather="dollar-sign"></span> EXPENSE CAPTURE</div>
-            <div class="marquee-item"><span data-feather="refresh-cw"></span> SUBSCRIPTION KILLER</div>
-            <div class="marquee-item"><span data-feather="smartphone"></span> MOBILE FRIENDLY</div>
-            <div class="marquee-item"><span data-feather="trending-up"></span> TRACK NET WORTH</div>
-            <div class="marquee-item"><span data-feather="pie-chart"></span> AUTOMATED REPORTS</div>
+    <div class="marquee-stack">
+        <div class="marquee-wrap marquee-1">
+            <div class="marquee-content scroll-left">
+                <div class="marquee-item"><span data-feather="trending-up"></span> TRACK NET WORTH</div>
+                <div class="marquee-item"><span data-feather="pie-chart"></span> AUTOMATED REPORTS</div>
+                <div class="marquee-item"><span data-feather="dollar-sign"></span> EXPENSE CAPTURE</div>
+                <div class="marquee-item"><span data-feather="refresh-cw"></span> SUBSCRIPTION KILLER</div>
+                <div class="marquee-item"><span data-feather="smartphone"></span> MOBILE FRIENDLY</div>
+                <div class="marquee-item"><span data-feather="trending-up"></span> TRACK NET WORTH</div>
+                <div class="marquee-item"><span data-feather="pie-chart"></span> AUTOMATED REPORTS</div>
+            </div>
+        </div>
+        <div class="marquee-wrap marquee-2">
+            <div class="marquee-content scroll-right">
+                <div class="marquee-item"><span data-feather="trending-up"></span> TRACK NET WORTH</div>
+                <div class="marquee-item"><span data-feather="pie-chart"></span> AUTOMATED REPORTS</div>
+                <div class="marquee-item"><span data-feather="dollar-sign"></span> EXPENSE CAPTURE</div>
+                <div class="marquee-item"><span data-feather="refresh-cw"></span> SUBSCRIPTION KILLER</div>
+                <div class="marquee-item"><span data-feather="smartphone"></span> MOBILE FRIENDLY</div>
+                <div class="marquee-item"><span data-feather="trending-up"></span> TRACK NET WORTH</div>
+                <div class="marquee-item"><span data-feather="pie-chart"></span> AUTOMATED REPORTS</div>
+            </div>
         </div>
     </div>
 
@@ -373,13 +428,7 @@
                     </div>
                 </div>
 
-                <div style="background: rgba(16, 185, 129, 0.1); border: 1px dashed var(--success); padding: 15px; border-radius: 8px; text-align: left; display: flex; gap: 10px;">
-                    <span data-feather="shield" style="color: var(--success); flex-shrink: 0;"></span>
-                    <div style="font-size: 0.85rem; color: var(--success);">
-                        <strong>30-Day Guarantee:</strong> If this template doesn't help you save money in the first month, I'll refund you 100%.
-                    </div>
                 </div>
-            </div>
         </div>
     </section>
 
@@ -406,24 +455,29 @@
     <script>
         feather.replace();
 
-        // 1. IMAGE TOGGLE LOGIC
+        // 1. IMAGE TOGGLE LOGIC (FIXED: DOES NOT BREAK BACKGROUND)
         function switchMode(mode) {
             const lightImg = document.getElementById('heroImageLight');
             const darkImg = document.getElementById('heroImageDark');
             const btns = document.querySelectorAll('.mode-btn');
+            const body = document.body;
             
             if (mode === 'dark') {
                 lightImg.style.display = 'none';
                 darkImg.style.display = 'block';
                 btns[0].classList.remove('active');
                 btns[1].classList.add('active');
-                // Change body background slightly to match dark mode vibe
-                document.body.style.backgroundImage = 'radial-gradient(at 0% 0%, rgba(20, 184, 166, 0.05) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(15, 118, 110, 0.05) 0px, transparent 50%)';
+                
+                // Add class to body to darken background color via CSS, keeping the grid
+                body.classList.add('dark-mode');
             } else {
                 lightImg.style.display = 'block';
                 darkImg.style.display = 'none';
                 btns[0].classList.add('active');
                 btns[1].classList.remove('active');
+                
+                // Remove class to revert to slate background, keeping the grid
+                body.classList.remove('dark-mode');
             }
         }
 
