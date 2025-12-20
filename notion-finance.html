@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teal Finance Tracker - Eray Sona</title>
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --brand-purple: #5D3FD3;
+            --teal-primary: #0d9488; /* Teal specifically for this product */
+            --teal-light: #ccfbf1;
+            --teal-hover: #0f766e;
+            --bg-color: #f8fafc;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --white: #ffffff;
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            /* Subtle background gradient */
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(13, 148, 136, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(93, 63, 211, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* --- UTILITIES --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--teal-primary);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--teal-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(13, 148, 136, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-gray);
+            border: 1px solid #e2e8f0;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--text-dark);
+            color: var(--text-dark);
+            background: white;
+            transform: none;
+            box-shadow: none;
+        }
+
+        section {
+            padding: 4rem 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        /* --- HEADER --- */
+        header {
+            padding: 1.5rem 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            padding-top: 6rem; /* Space for header */
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--text-dark), var(--teal-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+            max-width: 480px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--teal-light);
+            color: var(--teal-hover);
+            font-weight: 700;
+            font-size: 0.8rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- PAIN/SOLUTION --- */
+        .pain-points {
+            text-align: center;
+            background: white;
+        }
+
+        .pain-points h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .pain-points p {
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
+            color: var(--text-gray);
+        }
+
+        /* --- FEATURES --- */
+        .feature-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .feature-row.reverse {
+            direction: rtl; /* Quick way to flip columns */
+        }
+
+        .feature-row.reverse > * {
+            direction: ltr; /* Reset text direction */
+        }
+
+        .feature-text h3 {
+            font-size: 1.75rem;
+            color: var(--text-dark);
+        }
+
+        .feature-text p {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list li {
+            list-style: none;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            color: var(--teal-primary);
+            font-weight: bold;
+        }
+
+        /* --- PRICING --- */
+        .pricing-section {
+            background: linear-gradient(180deg, var(--bg-color) 0%, #e0f2fe 100%);
+            text-align: center;
+        }
+
+        .pricing-card {
+            background: white;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(13, 148, 136, 0.15);
+            border: 1px solid rgba(13, 148, 136, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .popular-tag {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--teal-primary);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 8px;
+            text-transform: uppercase;
+        }
+
+        .price {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin: 1.5rem 0 0.5rem 0;
+        }
+
+        .price-sub {
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .features-grid {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        /* --- FAQ --- */
+        .faq {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1.5rem 0;
+        }
+
+        .faq-question {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .faq-answer {
+            color: var(--text-gray);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* --- MOBILE --- */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.25rem; }
+            .hero-grid, .feature-row { grid-template-columns: 1fr; gap: 2rem; }
+            .feature-row.reverse { direction: ltr; }
+            .pricing-card { padding: 2rem 1.5rem; }
+            .hero { text-align: center; padding-top: 8rem; }
+            .hero-content p { margin: 0 auto 2rem auto; }
+            .hero-grid { display: flex; flex-direction: column-reverse; } /* Image on top mobile */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="btn-outline">&larr; Back to Home</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <span class="hero-badge">New Arrival</span>
+                    <h1>Stop Wondering Where Your Money Went.</h1>
+                    <p>The cleanest, most intuitive way to track income, manage recurring bills, and visualize your net worth—directly inside Notion.</p>
+                    
+                    <a href="https://eraysona.lemonsqueezy.com/checkout/buy/6cc75bef-cac6-406d-8eb2-d5403ac5749b" class="btn">
+                        Get the Teal Finance Tracker - $19.99
+                    </a>
+                    <div style="margin-top: 10px; font-size: 0.8rem; color: var(--text-gray);">
+                        One-time payment. Lifetime access.
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="finance-notion-premium.png" alt="Teal Finance Tracker Dashboard">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pain-points">
+        <div class="container">
+            <h2>Most finance apps are too complicated.</h2>
+            <p>You want to be on top of your finances, but tracking every coffee feels like a chore. You’ve tried expensive apps that overcomplicate things, or you’re stuck in "Excel hell."</p>
+            <p><strong>Enter the Teal Finance Tracker.</strong> Clarity without the clutter.</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="feature-row">
+                <div class="feature-text">
+                    <h3>Effortless Daily Tracking</h3>
+                    <p>Friction is the enemy of consistency. Our "Quick Add" buttons make logging an expense as fast as sending a text. Categorize it, tag it, and move on with your day.</p>
+                    <ul class="feature-list">
+                        <li>Inline entries (no new pages needed)</li>
+                        <li>Smart tagging for categories</li>
+                        <li>Daily summary view</li>
+                    </ul>
+                </div>
+                <div class="feature-img">
+                    <img src="expense-table.png" alt="Expense Tracking View">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background-color: white;">
+        <div class="container">
+            <div class="feature-row reverse">
+                <div class="feature-text">
+                    <h3>Visualize Your Path to Wealth</h3>
+                    <p>Numbers in a table don't motivate you. Beautiful, dynamic charts do. See your "Monthly Money Flow" and watch that net worth line go up over time.</p>
+                    <ul class="feature-list">
+                        <li>Dynamic Net Flow Graphs</li>
+                        <li>Visual Category Breakdowns</li>
+                        <li>"Get Rich Please" Motivation</li>
+                    </ul>
+                </div>
+                <div class="feature-img">
+                    <img src="all-time-table-.png" alt="Finance Charts and Graphs">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-section">
+        <div class="container">
+            <div class="pricing-card">
+                <div class="popular-tag">Launch Offer</div>
+                <h2>Complete Financial Clarity</h2>
+                <div class="price">$19.99</div>
+                <div class="price-sub">One-time payment. No monthly fees.</div>
+                
+                <div class="features-grid">
+                    <ul class="feature-list">
+                        <li>The Complete Teal Dashboard</li>
+                        <li>Income & Expense Tracking</li>
+                        <li>Recurring Subscription Manager</li>
+                        <li>Net Worth Calculator</li>
+                        <li>Mobile-Friendly View</li>
+                    </ul>
+                </div>
+
+                <a href="https://eraysona.lemonsqueezy.com/checkout/buy/6cc75bef-cac6-406d-8eb2-d5403ac5749b" class="btn" style="width: 100%;">
+                    Get Instant Access &rarr;
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section" style="background: white;">
+        <div class="container faq">
+            <h2 style="text-align: center; margin-bottom: 2rem;">Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">Do I need a paid Notion subscription?</div>
+                <div class="faq-answer">No! The core tracking features work perfectly on Notion’s free Personal plan.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Is this a monthly subscription?</div>
+                <div class="faq-answer">Absolutely not. This is a Notion template. You pay $19.99 once, and it's yours forever.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Is it difficult to set up?</div>
+                <div class="faq-answer">Not at all. We include a simple onboarding guide. You just duplicate the template into your workspace and start tracking.</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Eray Sona. All rights reserved.</p>
+            <p style="font-size: 0.8rem; margin-top: 10px;">Notion is a trademark of Notion Labs, Inc.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
