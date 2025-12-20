@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teal Finance Tracker - Eray Sona</title>
+    <title>Teal Finance Tracker - Premium Notion Template</title>
     <style>
-        /* --- VARIABLES & RESET --- */
+        /* --- VARIABLES (DARK MODE THEME) --- */
         :root {
-            --brand-purple: #5D3FD3;
-            --teal-primary: #0d9488; /* Teal specifically for this product */
-            --teal-light: #ccfbf1;
-            --teal-hover: #0f766e;
-            --bg-color: #f8fafc;
-            --text-dark: #1e293b;
-            --text-gray: #64748b;
-            --white: #ffffff;
+            --bg-color: #0f172a;      /* Deep Slate */
+            --card-bg: #1e293b;       /* Lighter Slate */
+            --text-main: #f8fafc;     /* Off-white */
+            --text-muted: #94a3b8;    /* Muted Blue-Grey */
+            
+            /* TEAL ACCENTS - Brighter for Dark Mode */
+            --teal-primary: #2dd4bf;  /* Vibrant Teal */
+            --teal-dim: #115e59;      /* Darker Teal for backgrounds */
+            --teal-glow: rgba(45, 212, 191, 0.2);
+            
             --radius: 16px;
         }
 
@@ -28,13 +30,13 @@
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-dark);
+            color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
-            /* Subtle background gradient */
+            /* Rich Dark Gradient Background */
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(13, 148, 136, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(93, 63, 211, 0.05) 0%, transparent 40%);
+                radial-gradient(circle at 15% 15%, rgba(45, 212, 191, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(93, 63, 211, 0.08) 0%, transparent 40%);
             background-attachment: fixed;
         }
 
@@ -45,66 +47,68 @@
             padding: 0 1.5rem;
         }
 
+        /* Enriched Button Style with Glow */
         .btn {
             display: inline-block;
-            background-color: var(--teal-primary);
-            color: white;
+            background: linear-gradient(135deg, var(--teal-primary), #0d9488);
+            color: #0f172a; /* Dark text for contrast */
             padding: 14px 28px;
             border-radius: 8px;
             text-decoration: none;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 1rem;
-            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
             text-align: center;
+            box-shadow: 0 0 15px var(--teal-glow);
         }
 
         .btn:hover {
-            background-color: var(--teal-hover);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(13, 148, 136, 0.3);
+            box-shadow: 0 0 25px rgba(45, 212, 191, 0.4);
+            filter: brightness(1.1);
         }
 
         .btn-outline {
             background: transparent;
-            color: var(--text-gray);
-            border: 1px solid #e2e8f0;
+            color: var(--text-muted);
+            border: 1px solid #334155;
             padding: 8px 16px;
+            border-radius: 8px;
             font-size: 0.9rem;
+            text-decoration: none;
+            transition: 0.2s;
         }
         
         .btn-outline:hover {
-            border-color: var(--text-dark);
-            color: var(--text-dark);
-            background: white;
-            transform: none;
-            box-shadow: none;
+            border-color: var(--text-main);
+            color: var(--text-main);
         }
 
         section {
-            padding: 4rem 0;
+            padding: 5rem 0;
         }
 
         img {
             max-width: 100%;
             height: auto;
             border-radius: var(--radius);
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+            /* Dark mode shadow + slight glow */
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
         }
 
         h1, h2, h3 {
             line-height: 1.2;
             margin-bottom: 1rem;
+            color: var(--text-main);
         }
 
-        /* --- HEADER --- */
-        header {
-            padding: 1.5rem 0;
-            position: absolute;
-            top: 0;
-            width: 100%;
-            z-index: 10;
+        /* Gradient Text Utility */
+        .text-gradient {
+            background: linear-gradient(to right, #f8fafc, var(--teal-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         /* --- HERO SECTION --- */
@@ -112,96 +116,80 @@
             min-height: 90vh;
             display: flex;
             align-items: center;
-            padding-top: 6rem; /* Space for header */
+            padding-top: 4rem;
         }
 
         .hero-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 3rem;
+            gap: 4rem;
             align-items: center;
         }
 
         .hero-content h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 800;
-            background: linear-gradient(to right, var(--text-dark), var(--teal-primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             margin-bottom: 1.5rem;
+            letter-spacing: -1px;
         }
 
         .hero-content p {
-            font-size: 1.1rem;
-            color: var(--text-gray);
-            margin-bottom: 2rem;
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
             max-width: 480px;
         }
 
-        .hero-badge {
+        .new-arrival-badge {
             display: inline-block;
-            background: var(--teal-light);
-            color: var(--teal-hover);
+            background: rgba(45, 212, 191, 0.15);
+            color: var(--teal-primary);
+            border: 1px solid rgba(45, 212, 191, 0.3);
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             padding: 6px 12px;
             border-radius: 20px;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* --- PAIN/SOLUTION --- */
-        .pain-points {
-            text-align: center;
-            background: white;
-        }
-
-        .pain-points h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .pain-points p {
-            max-width: 600px;
-            margin: 0 auto 2rem auto;
-            color: var(--text-gray);
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px var(--teal-glow);
         }
 
         /* --- FEATURES --- */
         .feature-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            gap: 5rem;
             align-items: center;
-            margin-bottom: 4rem;
+            margin-bottom: 2rem;
         }
 
         .feature-row.reverse {
-            direction: rtl; /* Quick way to flip columns */
+            direction: rtl;
         }
 
         .feature-row.reverse > * {
-            direction: ltr; /* Reset text direction */
+            direction: ltr;
         }
 
         .feature-text h3 {
-            font-size: 1.75rem;
-            color: var(--text-dark);
+            font-size: 2rem;
+            margin-bottom: 1rem;
         }
 
         .feature-text p {
-            color: var(--text-gray);
+            color: var(--text-muted);
+            font-size: 1.05rem;
             margin-bottom: 1.5rem;
         }
 
         .feature-list li {
             list-style: none;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            color: var(--text-dark);
+            gap: 0.75rem;
+            color: var(--text-main);
             font-weight: 500;
         }
 
@@ -211,63 +199,82 @@
             font-weight: bold;
         }
 
+        /* Warning Box for Notion Plus */
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1); /* Amber tint */
+            border-left: 3px solid #f59e0b;
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #d1d5db;
+        }
+        .warning-box strong { color: #fbbf24; }
+
         /* --- PRICING --- */
         .pricing-section {
-            background: linear-gradient(180deg, var(--bg-color) 0%, #e0f2fe 100%);
-            text-align: center;
+            padding: 6rem 0;
+            position: relative;
         }
-
+        
+        /* Glassmorphism Card */
         .pricing-card {
-            background: white;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             max-width: 500px;
             margin: 0 auto;
             padding: 3rem;
             border-radius: 24px;
-            box-shadow: 0 20px 40px -10px rgba(13, 148, 136, 0.15);
-            border: 1px solid rgba(13, 148, 136, 0.1);
             position: relative;
-            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .pricing-card:hover {
+            border-color: rgba(45, 212, 191, 0.3);
         }
 
         .popular-tag {
             position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
+            left: 50%;
+            transform: translateX(-50%);
             background: var(--teal-primary);
-            color: white;
-            font-size: 0.85rem;
-            font-weight: 700;
-            padding: 8px;
+            color: #0f172a;
+            font-size: 0.8rem;
+            font-weight: 800;
+            padding: 6px 16px;
+            border-radius: 0 0 10px 10px;
             text-transform: uppercase;
         }
 
         .price {
-            font-size: 3.5rem;
+            font-size: 4rem;
             font-weight: 800;
-            color: var(--text-dark);
-            margin: 1.5rem 0 0.5rem 0;
+            color: var(--text-main);
+            margin: 1.5rem 0 0.25rem 0;
+            letter-spacing: -2px;
         }
 
         .price-sub {
-            color: var(--text-gray);
-            margin-bottom: 2rem;
-            font-size: 0.9rem;
-        }
-
-        .features-grid {
-            text-align: left;
-            margin-bottom: 2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            font-size: 0.95rem;
         }
 
         /* --- FAQ --- */
+        .faq-section {
+            background: rgba(0,0,0,0.2);
+        }
+        
         .faq {
-            max-width: 800px;
+            max-width: 700px;
             margin: 0 auto;
         }
         
         .faq-item {
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #334155;
             padding: 1.5rem 0;
         }
 
@@ -275,36 +282,41 @@
             font-weight: 700;
             margin-bottom: 0.5rem;
             font-size: 1.1rem;
+            color: var(--text-main);
         }
 
         .faq-answer {
-            color: var(--text-gray);
+            color: var(--text-muted);
+            font-size: 0.95rem;
         }
 
         /* --- FOOTER --- */
         footer {
             text-align: center;
             padding: 3rem 0;
-            color: var(--text-gray);
+            color: var(--text-muted);
             font-size: 0.9rem;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid #334155;
         }
 
         /* --- MOBILE --- */
         @media (max-width: 768px) {
-            .hero-content h1 { font-size: 2.25rem; }
-            .hero-grid, .feature-row { grid-template-columns: 1fr; gap: 2rem; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-grid, .feature-row { grid-template-columns: 1fr; gap: 3rem; }
             .feature-row.reverse { direction: ltr; }
             .pricing-card { padding: 2rem 1.5rem; }
-            .hero { text-align: center; padding-top: 8rem; }
+            .hero { text-align: center; padding-top: 2rem; padding-bottom: 2rem; }
             .hero-content p { margin: 0 auto 2rem auto; }
-            .hero-grid { display: flex; flex-direction: column-reverse; } /* Image on top mobile */
+            .hero-grid { display: flex; flex-direction: column-reverse; } 
+            
+            /* Warning box mobile fix */
+            .warning-box { text-align: left; }
         }
     </style>
 </head>
 <body>
 
-    <header>
+    <header style="position: absolute; top: 0; left: 0; width: 100%; padding: 1.5rem 0; z-index: 10;">
         <div class="container">
             <a href="index.html" class="btn-outline">&larr; Back to Home</a>
         </div>
@@ -314,15 +326,15 @@
         <div class="container">
             <div class="hero-grid">
                 <div class="hero-content">
-                    <span class="hero-badge">New Arrival</span>
-                    <h1>Stop Wondering Where Your Money Went.</h1>
+                    <span class="new-arrival-badge">New Arrival</span>
+                    <h1 class="text-gradient">Stop Wondering Where Your Money Went.</h1>
                     <p>The cleanest, most intuitive way to track income, manage recurring bills, and visualize your net worth—directly inside Notion.</p>
                     
                     <a href="https://eraysona.lemonsqueezy.com/checkout/buy/6cc75bef-cac6-406d-8eb2-d5403ac5749b" class="btn">
-                        Get the Teal Finance Tracker - $19.99
+                        Get the Teal Finance Tracker
                     </a>
-                    <div style="margin-top: 10px; font-size: 0.8rem; color: var(--text-gray);">
-                        One-time payment. Lifetime access.
+                    <div style="margin-top: 12px; font-size: 0.85rem; color: var(--text-muted);">
+                        Instant Access • $19.99 One-time
                     </div>
                 </div>
                 <div class="hero-image">
@@ -332,24 +344,16 @@
         </div>
     </section>
 
-    <section class="pain-points">
-        <div class="container">
-            <h2>Most finance apps are too complicated.</h2>
-            <p>You want to be on top of your finances, but tracking every coffee feels like a chore. You’ve tried expensive apps that overcomplicate things, or you’re stuck in "Excel hell."</p>
-            <p><strong>Enter the Teal Finance Tracker.</strong> Clarity without the clutter.</p>
-        </div>
-    </section>
-
     <section>
         <div class="container">
             <div class="feature-row">
                 <div class="feature-text">
                     <h3>Effortless Daily Tracking</h3>
-                    <p>Friction is the enemy of consistency. Our "Quick Add" buttons make logging an expense as fast as sending a text. Categorize it, tag it, and move on with your day.</p>
+                    <p>Friction is the enemy of consistency. Our "Quick Add" buttons make logging an expense as fast as sending a text. Categorize it, tag it, and move on.</p>
                     <ul class="feature-list">
                         <li>Inline entries (no new pages needed)</li>
                         <li>Smart tagging for categories</li>
-                        <li>Daily summary view</li>
+                        <li>Daily summary & recurrence view</li>
                     </ul>
                 </div>
                 <div class="feature-img">
@@ -359,7 +363,7 @@
         </div>
     </section>
 
-    <section style="background-color: white;">
+    <section>
         <div class="container">
             <div class="feature-row reverse">
                 <div class="feature-text">
@@ -370,6 +374,12 @@
                         <li>Visual Category Breakdowns</li>
                         <li>"Get Rich Please" Motivation</li>
                     </ul>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Note on Charts:</strong><br>
+                        While tracking works perfectly on the Free plan, viewing <em>all</em> charts simultaneously (as shown) requires a <strong>Notion Plus</strong> subscription due to free plan chart limits.
+                    </div>
+
                 </div>
                 <div class="feature-img">
                     <img src="all-time-table-.png" alt="Finance Charts and Graphs">
@@ -382,17 +392,17 @@
         <div class="container">
             <div class="pricing-card">
                 <div class="popular-tag">Launch Offer</div>
-                <h2>Complete Financial Clarity</h2>
+                <h2 style="font-size: 1.8rem; margin-top: 1rem;">Complete Clarity</h2>
                 <div class="price">$19.99</div>
-                <div class="price-sub">One-time payment. No monthly fees.</div>
+                <div class="price-sub">One-time payment. Lifetime access.</div>
                 
-                <div class="features-grid">
+                <div class="features-grid" style="text-align: left; margin-bottom: 2.5rem; padding: 0 1rem;">
                     <ul class="feature-list">
-                        <li>The Complete Teal Dashboard</li>
+                        <li>The Premium Dashboard</li>
                         <li>Income & Expense Tracking</li>
                         <li>Recurring Subscription Manager</li>
                         <li>Net Worth Calculator</li>
-                        <li>Mobile-Friendly View</li>
+                        <li style="color: var(--text-muted); font-size: 0.9rem;">*Unlimited charts require Notion Plus</li>
                     </ul>
                 </div>
 
@@ -403,18 +413,18 @@
         </div>
     </section>
 
-    <section class="faq-section" style="background: white;">
+    <section class="faq-section">
         <div class="container faq">
-            <h2 style="text-align: center; margin-bottom: 2rem;">Frequently Asked Questions</h2>
+            <h2 style="text-align: center; margin-bottom: 2.5rem;">Frequently Asked Questions</h2>
             
             <div class="faq-item">
-                <div class="faq-question">Do I need a paid Notion subscription?</div>
-                <div class="faq-answer">No! The core tracking features work perfectly on Notion’s free Personal plan.</div>
+                <div class="faq-question">Do I need Notion Plus?</div>
+                <div class="faq-answer">For basic tracking (income, expenses, recurring bills), <strong>No</strong>. You can use the free plan. However, to view unlimited charts on the dashboard simultaneously, Notion requires a Plus subscription.</div>
             </div>
 
             <div class="faq-item">
                 <div class="faq-question">Is this a monthly subscription?</div>
-                <div class="faq-answer">Absolutely not. This is a Notion template. You pay $19.99 once, and it's yours forever.</div>
+                <div class="faq-answer">Absolutely not. This is a Notion template. You pay $19.99 once, and it's yours forever to duplicate and use.</div>
             </div>
 
             <div class="faq-item">
@@ -427,7 +437,7 @@
     <footer>
         <div class="container">
             <p>&copy; 2025 Eray Sona. All rights reserved.</p>
-            <p style="font-size: 0.8rem; margin-top: 10px;">Notion is a trademark of Notion Labs, Inc.</p>
+            <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">Notion is a trademark of Notion Labs, Inc.</p>
         </div>
     </footer>
 
