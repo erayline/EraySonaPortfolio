@@ -39,23 +39,29 @@
         /* --- BASE RESET & ANIMATIONS --- */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; font-size: 16px; }
+        
         body {
-            font-family: var(--font-sans); background-color: var(--bg-page); color: var(--text-main);
-            line-height: 1.6; overflow-x: hidden;
-            /* THE GRID BACKGROUND - NOW PERSISTENT */
+            font-family: var(--font-sans); 
+            background-color: var(--bg-page); 
+            color: var(--text-main);
+            line-height: 1.6; 
+            overflow-x: hidden;
+            
+            /* PERSISTENT GRID BACKGROUND */
             background-image: 
                 radial-gradient(at 0% 0%, rgba(20, 184, 166, 0.15) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(15, 118, 110, 0.15) 0px, transparent 50%),
                 linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
             background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            background-attachment: fixed; /* Keeps grid stable during scroll */
             padding-bottom: 80px;
             transition: background-color 0.3s ease;
         }
 
-        /* Dark Mode Specific Tweaks (Toggled via JS Class) */
+        /* Dark Mode Override */
         body.dark-mode {
-            --bg-page: #020617; /* Even darker for 'Dark Mode' feel */
+            --bg-page: #020617; /* Darker Slate */
         }
 
         h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.1; color: white; }
@@ -71,9 +77,6 @@
         /* Animation Classes */
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
-        
-        @keyframes pulse { 0%,100% {opacity:1} 50% {opacity:0.85} }
-        @keyframes glow { from{box-shadow:0 0 0 4px rgba(20, 184, 166, 0.3)} to{box-shadow:0 0 0 10px rgba(20, 184, 166, 0.1)} }
 
         /* --- BUTTONS --- */
         .btn {
@@ -136,44 +139,46 @@
         }
         #heroImageDark { display: none; } 
 
-        /* --- CROSS MARQUEE --- */
+        /* --- STACKED MARQUEE (NO OVERLAP) --- */
         .marquee-stack {
+            display: flex; flex-direction: column; 
+            gap: 1rem; /* No gap between elements */
+            margin: 6rem 0; /* Space from other sections */
             position: relative;
-            height: 120px; /* Reduced height to keep them tight */
-            margin: 4rem 0;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         
-        .marquee-wrap { 
-            position: absolute;
-            width: 120%;
-            background: #020617; 
+        .marquee-strip {
+            width: 110%; 
+            margin-left: -5%; /* Pull wide to cover edges */
+            padding: 18px 0; 
+            overflow: hidden; 
+            display: flex;
             border-top: 1px solid var(--border); 
-            border-bottom: 1px solid var(--border); 
-            padding: 12px 0; 
-            left: -10%;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        .marquee-1 {
-            transform: rotate(-2.5deg);
+        /* Top Line: Tilted Left */
+        .marquee-top {
+            background: #020617; 
+            transform: rotate(-1.5deg);
             z-index: 2;
         }
-        
-        .marquee-2 {
-            transform: rotate(2.5deg);
+
+        /* Bottom Line: Tilted Right (Opposite) */
+        .marquee-bottom {
+            background: #0f172a; /* Slightly lighter for distinction */
+            transform: rotate(1deg);
             z-index: 1;
-            background: #0f172a; /* Slightly lighter bg for contrast */
+            margin-top: -10px; /* Slight negative margin to touch the top one, but not overlap text */
         }
 
         .marquee-content { display: flex; gap: 50px; white-space: nowrap; }
         .scroll-left { animation: scroll 30s linear infinite; }
-        .scroll-right { animation: scroll 30s linear infinite reverse; }
+        .scroll-right { animation: scroll 35s linear infinite reverse; }
 
         .marquee-item { font-family: var(--font-mono); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; color: var(--brand); display: flex; align-items: center; gap: 10px; }
+        .marquee-item.alt-text { color: #f8fafc; font-weight: 600; font-family: var(--font-sans); }
         
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
@@ -246,7 +251,7 @@
             .feature-grid { grid-template-columns: 1fr; direction: ltr !important; }
             .feature-text { text-align: left; margin-bottom: 20px; }
             #salesPopup { display: none; }
-            .marquee-stack { height: 100px; }
+            .marquee-stack { margin: 3rem 0; }
         }
     </style>
 </head>
@@ -296,7 +301,8 @@
     </section>
 
     <div class="marquee-stack">
-        <div class="marquee-wrap marquee-1">
+        
+        <div class="marquee-strip marquee-top">
             <div class="marquee-content scroll-left">
                 <div class="marquee-item"><span data-feather="trending-up"></span> TRACK NET WORTH</div>
                 <div class="marquee-item"><span data-feather="pie-chart"></span> AUTOMATED REPORTS</div>
@@ -307,17 +313,17 @@
                 <div class="marquee-item"><span data-feather="pie-chart"></span> AUTOMATED REPORTS</div>
             </div>
         </div>
-        <div class="marquee-wrap marquee-2">
+
+        <div class="marquee-strip marquee-bottom">
             <div class="marquee-content scroll-right">
-                <div class="marquee-item"><span data-feather="trending-up"></span> TRACK NET WORTH</div>
-                <div class="marquee-item"><span data-feather="pie-chart"></span> AUTOMATED REPORTS</div>
-                <div class="marquee-item"><span data-feather="dollar-sign"></span> EXPENSE CAPTURE</div>
-                <div class="marquee-item"><span data-feather="refresh-cw"></span> SUBSCRIPTION KILLER</div>
-                <div class="marquee-item"><span data-feather="smartphone"></span> MOBILE FRIENDLY</div>
-                <div class="marquee-item"><span data-feather="trending-up"></span> TRACK NET WORTH</div>
-                <div class="marquee-item"><span data-feather="pie-chart"></span> AUTOMATED REPORTS</div>
+                <div class="marquee-item alt-text">💡 "People who budget save 2.5x more monthly"</div>
+                <div class="marquee-item alt-text">💰 "Tracking net worth is the #1 wealth habit"</div>
+                <div class="marquee-item alt-text">📈 "Stop guessing, start growing"</div>
+                <div class="marquee-item alt-text">💡 "People who budget save 2.5x more monthly"</div>
+                <div class="marquee-item alt-text">💰 "Tracking net worth is the #1 wealth habit"</div>
             </div>
         </div>
+
     </div>
 
     <section class="container" id="features" style="padding-top: 4rem;">
@@ -427,8 +433,7 @@
                         <span>$98.00</span>
                     </div>
                 </div>
-
-                </div>
+            </div>
         </div>
     </section>
 
@@ -455,7 +460,7 @@
     <script>
         feather.replace();
 
-        // 1. IMAGE TOGGLE LOGIC (FIXED: DOES NOT BREAK BACKGROUND)
+        // 1. IMAGE TOGGLE LOGIC (PERSISTENT GRID)
         function switchMode(mode) {
             const lightImg = document.getElementById('heroImageLight');
             const darkImg = document.getElementById('heroImageDark');
@@ -468,7 +473,7 @@
                 btns[0].classList.remove('active');
                 btns[1].classList.add('active');
                 
-                // Add class to body to darken background color via CSS, keeping the grid
+                // Add class to body to change BG color, but grid image remains because it's on 'body' and 'body.dark-mode' only overrides background-color
                 body.classList.add('dark-mode');
             } else {
                 lightImg.style.display = 'block';
@@ -476,7 +481,6 @@
                 btns[0].classList.add('active');
                 btns[1].classList.remove('active');
                 
-                // Remove class to revert to slate background, keeping the grid
                 body.classList.remove('dark-mode');
             }
         }
