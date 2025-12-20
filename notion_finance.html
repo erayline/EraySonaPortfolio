@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teal Finance Tracker | Master Your Net Worth</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+        :root {
+            /* --- TEAL BRAND SYSTEM --- */
+            --bg-page: #0f172a; /* Dark Slate Background for Premium Feel */
+            --bg-card: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            
+            /* The TEAL Brand */
+            --brand: #14b8a6; /* Teal 500 */
+            --brand-dark: #0f766e;
+            --brand-glow: rgba(20, 184, 166, 0.5);
+            --brand-gradient: linear-gradient(135deg, #2dd4bf 0%, #0f766e 100%);
+            
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            
+            --border: #334155;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        /* --- BASE RESET & ANIMATIONS --- */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: var(--font-sans); background: var(--bg-page); color: var(--text-main);
+            line-height: 1.6; overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(20, 184, 166, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(15, 118, 110, 0.15) 0px, transparent 50%),
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            padding-bottom: 80px;
+        }
+
+        h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.1; color: white; }
+        h1 { font-weight: 800; } 
+        .mono { font-family: var(--font-mono); }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+        .flex-center { display: flex; align-items: center; justify-content: center; }
+        .text-center { text-align: center; }
+        .mb-1 { margin-bottom: 1rem; } .mb-2 { margin-bottom: 2rem; } .mb-4 { margin-bottom: 4rem; }
+        .w-full { width: 100%; }
+        .highlight { color: var(--brand); text-shadow: 0 0 20px var(--brand-glow); }
+
+        /* Animation Classes */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        @keyframes pulse { 0%,100% {opacity:1} 50% {opacity:0.85} }
+        @keyframes glow { from{box-shadow:0 0 0 4px rgba(20, 184, 166, 0.3)} to{box-shadow:0 0 0 10px rgba(20, 184, 166, 0.1)} }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 16px 32px; border-radius: 12px; font-weight: 600; text-decoration: none;
+            transition: all 0.2s; cursor: pointer; border: none; position: relative; overflow: hidden;
+        }
+        .btn-brand {
+            background: var(--brand-gradient); color: #0f172a;
+            box-shadow: 0 0 20px var(--brand-glow);
+        }
+        .btn-brand:hover { transform: translateY(-2px); box-shadow: 0 0 30px var(--brand-glow); color: black; }
+        .btn-outline {
+            background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+        }
+        .btn-outline:hover { border-color: var(--brand); color: var(--brand); background: rgba(20, 184, 166, 0.1); }
+
+        /* --- SCARCITY BAR --- */
+        .scarcity-bar {
+            background: var(--brand); color: #0f172a; text-align: center; padding: 12px; 
+            font-size: 0.9rem; font-weight: 700; letter-spacing: 0.5px;
+        }
+
+        /* --- NAV --- */
+        nav {
+            border-bottom: 1px solid rgba(255,255,255,0.1); padding: 20px 0; 
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px);
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        /* --- HERO --- */
+        .hero { padding: 6rem 0 3rem; text-align: center; position: relative; }
+        .hero h1 { 
+            font-size: 4rem; margin-bottom: 1.5rem; 
+            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        }
+        .hero p { font-size: 1.35rem; color: var(--text-muted); max-width: 640px; margin: 0 auto 2rem; }
+        
+        /* THE TOGGLE SWITCH FOR IMAGES */
+        .mode-toggle-container {
+            display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;
+            background: rgba(255,255,255,0.05); padding: 5px; border-radius: 50px; display: inline-flex;
+            border: 1px solid var(--border);
+        }
+        .mode-btn {
+            padding: 8px 16px; border-radius: 40px; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+            transition: 0.3s; color: var(--text-muted);
+        }
+        .mode-btn.active { background: var(--brand); color: #0f172a; box-shadow: 0 0 15px var(--brand-glow); }
+
+        .hero-visual-container {
+            position: relative; margin-top: 2rem; perspective: 1000px;
+        }
+        .hero-img { 
+            width: 100%; border-radius: var(--radius-md); 
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 100px -20px rgba(20, 184, 166, 0.25);
+            transition: opacity 0.5s ease;
+        }
+        #heroImageDark { display: none; } /* Hidden by default */
+
+        /* --- MARQUEE --- */
+        .marquee-wrap { overflow: hidden; background: #020617; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 18px 0; transform: rotate(-1deg); margin: 3rem 0; }
+        .marquee-content { display: flex; gap: 50px; animation: scroll 30s linear infinite; white-space: nowrap; }
+        .marquee-item { font-family: var(--font-mono); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; color: var(--brand); display: flex; align-items: center; gap: 10px; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* --- FEATURE GRIDS --- */
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 100px; align-items: center; }
+        .feature-grid.reverse { direction: rtl; }
+        .feature-grid.reverse .feature-text { direction: ltr; }
+        .feature-img-box {
+            background: var(--bg-card); padding: 20px; border-radius: var(--radius-md);
+            border: 1px solid var(--border); position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s;
+        }
+        .feature-img-box:hover { transform: translateY(-5px); border-color: var(--brand); }
+        .feature-img { width: 100%; border-radius: 8px; }
+        
+        .feature-text h3 { font-size: 2rem; margin-bottom: 1rem; }
+        .feature-text p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 1.5rem; }
+        
+        .badge { 
+            background: rgba(20, 184, 166, 0.1); color: var(--brand); 
+            padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; 
+            font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 15px; display: inline-block; border: 1px solid rgba(20, 184, 166, 0.2);
+        }
+
+        /* --- PRICING SECTION --- */
+        .pricing-section {
+            background: linear-gradient(180deg, var(--bg-page) 0%, #020617 100%);
+            padding: 5rem 0;
+            position: relative;
+        }
+        .price-card {
+            background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px);
+            border: 1px solid var(--brand);
+            border-radius: var(--radius-lg);
+            padding: 3rem; max-width: 500px; margin: 0 auto;
+            text-align: center;
+            box-shadow: 0 0 60px rgba(20, 184, 166, 0.15);
+            position: relative; overflow: hidden;
+        }
+        .price-card::before {
+            content: "BEST SELLER"; position: absolute; top: 20px; right: -30px;
+            background: var(--brand); color: #0f172a; font-weight: 800; font-size: 0.7rem;
+            padding: 5px 30px; transform: rotate(45deg);
+        }
+        .price-large { font-size: 4rem; font-weight: 800; line-height: 1; margin: 20px 0; color: white; }
+        .price-old { text-decoration: line-through; color: var(--text-muted); font-size: 1.5rem; opacity: 0.6; }
+
+        .value-stack { text-align: left; margin: 30px 0; border-top: 1px solid var(--border); padding-top: 20px; }
+        .stack-item { display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-muted); font-size: 0.95rem; }
+        .stack-item span:last-child { font-family: var(--font-mono); color: var(--text-main); }
+
+        /* --- POPUPS --- */
+        #salesPopup {
+            position: fixed; bottom: 90px; left: 20px;
+            background: rgba(30, 41, 59, 0.9); border: 1px solid var(--border);
+            backdrop-filter: blur(10px); padding: 12px 20px; 
+            border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
+            z-index: 999; font-size: 0.9rem;
+            display: none; align-items: center; gap: 12px;
+            border-left: 4px solid var(--brand);
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp { from{transform:translateY(50px);opacity:0} to{transform:translateY(0);opacity:1} }
+        
+        /* Mobile */
+        @media (max-width: 800px) {
+            .hero h1 { font-size: 2.5rem; }
+            .feature-grid { grid-template-columns: 1fr; direction: ltr !important; }
+            .feature-text { text-align: left; margin-bottom: 20px; }
+            #salesPopup { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scarcity-bar">
+        ⚡ LAUNCH SALE: Get the Premium Template for $19.99 (Usually $49) — Offer ends in <span class="mono" id="topTimer">04:12:09</span>
+    </div>
+
+    <nav>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="flex-center" style="gap: 10px; font-weight: 800; font-size: 1.2rem; letter-spacing: -1px;">
+                <div style="width:24px; height:24px; background:var(--brand); border-radius:6px;"></div>
+                Teal<span style="color:var(--brand);">Tracker</span>.
+            </div>
+            <a href="#pricing" class="btn btn-brand" style="padding: 10px 24px; font-size: 0.9rem;">Get Template</a>
+        </div>
+    </nav>
+
+    <section class="hero reveal active">
+        <div class="container">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 6px 16px; border-radius: 50px; margin-bottom: 20px; border: 1px solid var(--border);">
+                <span style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 10px var(--success);"></span>
+                <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">Updated for Notion 2025</span>
+            </div>
+
+            <h1>Stop Wondering Where<br>Your Money Went.</h1>
+            <p>The aesthetic, engineering-grade financial dashboard for Notion. Track income, kill subscriptions, and watch your net worth grow.</p>
+            
+            <div style="display: flex; gap: 16px; justify-content: center; margin-bottom: 3rem; flex-wrap: wrap;">
+                <a href="#pricing" class="btn btn-brand" style="font-size: 1.1rem; padding: 18px 36px;">
+                    <span data-feather="download"></span> Get It For $19.99
+                </a>
+                <a href="#features" class="btn btn-outline">See How It Works</a>
+            </div>
+
+            <div class="mode-toggle-container">
+                <div class="mode-btn active" onclick="switchMode('white')">☀️ Light Mode</div>
+                <div class="mode-btn" onclick="switchMode('dark')">🌙 Dark Mode</div>
+            </div>
+
+            <div class="hero-visual-container">
+                <img src="white_mode.png" id="heroImageLight" class="hero-img" alt="Notion Finance Template Light">
+                <img src="dark_mode.png" id="heroImageDark" class="hero-img" alt="Notion Finance Template Dark">
+            </div>
+        </div>
+    </section>
+
+    <div class="marquee-wrap">
+        <div class="marquee-content">
+            <div class="marquee-item"><span data-feather="trending-up"></span> TRACK NET WORTH</div>
+            <div class="marquee-item"><span data-feather="pie-chart"></span> AUTOMATED REPORTS</div>
+            <div class="marquee-item"><span data-feather="dollar-sign"></span> EXPENSE CAPTURE</div>
+            <div class="marquee-item"><span data-feather="refresh-cw"></span> SUBSCRIPTION KILLER</div>
+            <div class="marquee-item"><span data-feather="smartphone"></span> MOBILE FRIENDLY</div>
+            <div class="marquee-item"><span data-feather="trending-up"></span> TRACK NET WORTH</div>
+            <div class="marquee-item"><span data-feather="pie-chart"></span> AUTOMATED REPORTS</div>
+        </div>
+    </div>
+
+    <section class="container" id="features" style="padding-top: 4rem;">
+        
+        <div class="feature-grid reveal">
+            <div class="feature-text">
+                <div class="badge">Visual Analytics</div>
+                <h3>Watch Your Wealth Grow</h3>
+                <p>Text-based budgets are boring. Our dynamic line graphs visualize your cash flow over the entire year. Spot seasonal trends and gamify your savings.</p>
+                <ul style="list-style: none; color: var(--text-muted);">
+                    <li class="mb-1"><span data-feather="check" style="color:var(--brand); width:16px;"></span> Monthly Net Flow calculation</li>
+                    <li class="mb-1"><span data-feather="check" style="color:var(--brand); width:16px;"></span> Zero-setup required</li>
+                </ul>
+            </div>
+            <div class="feature-img-box">
+                <img src="monthly_money_flow.png" class="feature-img" alt="Monthly Money Flow Graph">
+            </div>
+        </div>
+
+        <div class="feature-grid reverse reveal">
+            <div class="feature-text">
+                <div class="badge">Spending Habits</div>
+                <h3>Stop Bleeding Money</h3>
+                <p>Where is your paycheck going? The automated pie charts break down your spending by category (Groceries, Tech, Transport) instantly. Switch between Weekly and Monthly views with one click.</p>
+            </div>
+            <div class="feature-img-box">
+                <img src="weekly_monthly_pie.png" class="feature-img" alt="Pie Charts">
+            </div>
+        </div>
+
+        <div class="feature-grid reveal">
+            <div class="feature-text">
+                <div class="badge">Zero Friction</div>
+                <h3>2-Second Entry System</h3>
+                <p>Budgeting fails when it's hard to do. We built "Quick Buttons" that let you log an expense or income in seconds directly from your dashboard.</p>
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-top: 10px;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">RECENT ENTRIES</div>
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.1); padding:5px 0;">
+                        <span>Gambled my money</span> <span style="color: var(--danger)">-$23.00</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding:5px 0;">
+                        <span>Youtube Revenue</span> <span style="color: var(--success)">+$2.42</span>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-img-box">
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <img src="income_entry.png" class="feature-img" alt="Income Entry">
+                    <img src="expense_entry.png" class="feature-img" alt="Expense Entry">
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-grid reverse reveal">
+            <div class="feature-text">
+                <div class="badge">Automation</div>
+                <h3>The Subscription Killer</h3>
+                <p>Never get hit with a surprise renewal again. Track all your recurring software, gym, and streaming costs. The template highlights active subscriptions and calculates your monthly burn rate.</p>
+            </div>
+            <div class="feature-img-box">
+                <img src="recurring_expense_entry.png" class="feature-img" alt="Recurring Expenses">
+            </div>
+        </div>
+
+    </section>
+
+    <section class="pricing-section" id="pricing">
+        <div class="container reveal">
+            <div class="text-center mb-2">
+                <h2 style="font-size: 2.5rem;">One Dashboard. Total Freedom.</h2>
+                <p style="color: var(--text-muted);">Join 1,200+ users building wealth with Teal Tracker.</p>
+            </div>
+
+            <div class="price-card">
+                <div style="font-size: 1.1rem; color: var(--brand); font-weight: 700; letter-spacing: 1px;">LIFETIME ACCESS</div>
+                <div class="price-large">
+                    <span class="price-old">$49</span> $19<span style="font-size: 1.5rem; vertical-align: super;">.99</span>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">One-time payment. No monthly fees. Use it forever.</p>
+
+                <a href="#" class="btn btn-brand w-full" style="margin-top: 20px; font-size: 1.2rem; padding: 20px;">
+                    Download Template Now
+                </a>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">
+                    <span data-feather="lock" style="width: 10px;"></span> Secure checkout via LemonSqueezy
+                </div>
+
+                <div class="value-stack">
+                    <div class="stack-item">
+                        <span>Teal Tracker Dashboard</span>
+                        <span>$49.00 Value</span>
+                    </div>
+                    <div class="stack-item">
+                        <span>Mobile View Optimization</span>
+                        <span>$19.00 Value</span>
+                    </div>
+                    <div class="stack-item">
+                        <span>Subscription Tracker</span>
+                        <span>$15.00 Value</span>
+                    </div>
+                    <div class="stack-item">
+                        <span>Dark Mode Aesthetics</span>
+                        <span>$15.00 Value</span>
+                    </div>
+                    <div class="stack-item" style="color: var(--brand); font-weight: 700; border-top: 1px dashed var(--border); padding-top: 10px; margin-top: 10px;">
+                        <span>Total Value</span>
+                        <span>$98.00</span>
+                    </div>
+                </div>
+
+                <div style="background: rgba(16, 185, 129, 0.1); border: 1px dashed var(--success); padding: 15px; border-radius: 8px; text-align: left; display: flex; gap: 10px;">
+                    <span data-feather="shield" style="color: var(--success); flex-shrink: 0;"></span>
+                    <div style="font-size: 0.85rem; color: var(--success);">
+                        <strong>30-Day Guarantee:</strong> If this template doesn't help you save money in the first month, I'll refund you 100%.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="border-top: 1px solid var(--border); padding: 40px 0; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+        <div class="container">
+            <p>&copy; 2025 Teal Finance Tracker. All rights reserved.</p>
+            <p style="margin-top: 10px; opacity: 0.5;">Not associated with Notion Labs, Inc.</p>
+        </div>
+    </footer>
+
+    <div id="stickyCTA" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; z-index: 998; display: none;">
+        <a href="#pricing" class="btn btn-brand w-full" style="box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+            Get Organized for $19.99
+        </a>
+    </div>
+
+    <div id="salesPopup">
+        <div style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 5px var(--success);"></div>
+        <div>
+            <span style="color: white; font-weight: 700;" id="viewerCount">114</span> people are viewing this page
+        </div>
+    </div>
+
+    <script>
+        feather.replace();
+
+        // 1. IMAGE TOGGLE LOGIC
+        function switchMode(mode) {
+            const lightImg = document.getElementById('heroImageLight');
+            const darkImg = document.getElementById('heroImageDark');
+            const btns = document.querySelectorAll('.mode-btn');
+            
+            if (mode === 'dark') {
+                lightImg.style.display = 'none';
+                darkImg.style.display = 'block';
+                btns[0].classList.remove('active');
+                btns[1].classList.add('active');
+                // Change body background slightly to match dark mode vibe
+                document.body.style.backgroundImage = 'radial-gradient(at 0% 0%, rgba(20, 184, 166, 0.05) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(15, 118, 110, 0.05) 0px, transparent 50%)';
+            } else {
+                lightImg.style.display = 'block';
+                darkImg.style.display = 'none';
+                btns[0].classList.add('active');
+                btns[1].classList.remove('active');
+            }
+        }
+
+        // 2. SCROLL REVEAL
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // 3. COUNTDOWN TIMER
+        function startTimer(duration, display) {
+            let timer = duration, hours, minutes, seconds;
+            setInterval(function () {
+                hours = parseInt(timer / 3600, 10);
+                minutes = parseInt((timer % 3600) / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                hours = hours < 10 ? "0" + hours : hours;
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = hours + ":" + minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    timer = duration;
+                }
+            }, 1000);
+        }
+        window.onload = function () {
+            startTimer(15129, document.querySelector('#topTimer'));
+            
+            // Show sales popup after 3 seconds
+            setTimeout(() => {
+                document.getElementById('salesPopup').style.display = 'flex';
+                // Randomize viewer count slightly
+                setInterval(() => {
+                    let count = 100 + Math.floor(Math.random() * 40);
+                    document.getElementById('viewerCount').innerText = count;
+                }, 5000);
+            }, 3000);
+        };
+
+        // 4. STICKY BUTTON ON SCROLL
+        window.onscroll = function() {
+            if (window.scrollY > 500) {
+                document.getElementById("stickyCTA").style.display = "block";
+            } else {
+                document.getElementById("stickyCTA").style.display = "none";
+            }
+        };
+    </script>
+</body>
+</html>
