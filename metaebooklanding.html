@@ -796,8 +796,8 @@
             // Create a "realistic" number based on the time of day (Peak hours = more viewers)
             // This formula ensures the number stays the same for everyone during that specific hour
             let baseViewers = 101; 
-            if (hour >= 18 && hour <= 23) baseViewers = 550; // Peak evening time
-            else if (hour >= 9 && hour < 18) baseViewers = 350; // Work hours
+            if (hour >= 18 && hour <= 23) baseViewers = 250; // Peak evening time
+            else if (hour >= 9 && hour < 18) baseViewers = 150; // Work hours
             
             // Add a slight variance based on the date so it changes slightly day-to-day
             const variance = (now.getDate() * 3) + hour;
