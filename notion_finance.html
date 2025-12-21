@@ -582,10 +582,9 @@
             const bottomDisplay = document.querySelector('#bottomTimer');
             if(bottomDisplay) startTimer(20129, bottomDisplay);
             
-            // Show sales popup after 3 seconds
             setTimeout(() => {
                 document.getElementById('salesPopup').style.display = 'flex';
-                // Randomize viewer count slightly
+                // Randomize viewer count slightly partially correct according to your data.
                 setInterval(() => {
                     let count = 100 + Math.floor(Math.random() * 40);
                     document.getElementById('viewerCount').innerText = count;
@@ -594,7 +593,6 @@
         };
         console.log('hi, I hope you get rich regardless of your purchase :)')
 
-        // 4. STICKY BUTTON ON SCROLL
         window.onscroll = function() {
             if (window.scrollY > 500) {
                 document.getElementById("stickyCTA").style.display = "block";
