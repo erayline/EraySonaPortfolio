@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitShow - Social Habit Tracker</title>
+    <meta name="description" content="The multiplayer habit tracker. Join squads, share your grid, and use social pressure to never miss a day.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        scaffold: '#020617', 
+                        surface: '#1e293b',
+                        brand: '#4ADE80',    
+                        brandGlow: '#86efac',
+                        habitBlue: '#3B82F6',
+                        habitPurple: '#A855F7',
+                        habitPink: '#F472B6',
+                        habitOrange: '#F97316',
+                        habitTeal: '#14B8A6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-up': 'fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'scroll': 'scroll 40s linear infinite',
+                        'float': 'float 8s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        scroll: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #020617; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* 3D Phone styling */
+        .phone-mockup {
+            border: 8px solid #1e293b;
+            border-radius: 2rem;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 30px 60px -10px rgba(74, 222, 128, 0.15); /* Green glow */
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+        
+        /* Canvas is fixed to background of Hero */
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3; /* Dimmed */
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+        }
+
+        /* --- LOCALIZED NOISE OVERLAY (Hero Only) --- */
+        .hero-noise {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1; 
+            opacity: 0.12; 
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+
+<body class="text-white overflow-x-hidden selection:bg-brand selection:text-black">
+
+    <nav class="fixed top-0 w-full z-40 bg-[#020617]/80 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2 group">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition duration-300 overflow-hidden border border-white/10">
+                    <img src="habitshow.png" alt="Logo" class="w-full h-full object-cover">
+                </div>
+                <span class="text-lg font-bold tracking-tight">Habit<span class="text-brand">Show</span></span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+                <a href="#features" class="hover:text-white transition">Features</a>
+                <a href="#reviews" class="hover:text-white transition">Reviews</a>
+            </div>
+
+            <a href="#download" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-4 py-2 rounded-full text-xs font-bold transition">
+                Get App
+            </a>
+        </div>
+    </nav>
+
+    <header id="hero-section" class="relative pt-32 pb-24 px-6 max-w-7xl mx-auto overflow-hidden min-h-[850px] flex items-center">
+        
+        <canvas id="hero-canvas"></canvas>
+        
+        <div class="hero-noise"></div>
+
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full pointer-events-none">
+            
+            <div class="text-center lg:text-left animate-fade-up">
+                
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-brand/30 text-brand text-xs font-bold uppercase tracking-wider mb-8 shadow-[0_0_20px_rgba(74,222,128,0.2)] pointer-events-auto">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-brand"></span>
+                    </span>
+                    Multiplayer Habit Tracker
+                </div>
+                
+                <h1 class="text-6xl md:text-8xl font-extrabold leading-[0.9] tracking-tighter mb-8 drop-shadow-2xl">
+                    Become <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand via-white to-brand bg-[length:200%_auto] animate-text-shimmer">Superhuman.</span>
+                </h1>
+                
+                <p class="text-gray-400 text-lg md:text-xl mb-10 max-w-lg mx-auto lg:mx-0 font-medium leading-relaxed drop-shadow-md">
+                    Stop relying on motivation. Join squads, roast your friends, and use <span class="text-white font-bold underline decoration-brand decoration-2 underline-offset-4">brutal accountability</span> to build a 1% life.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pointer-events-auto">
+                    <a href="https://play.google.com/store/apps/details?id=com.habitshow.app" target="_blank" class="bg-brand text-black px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-white hover:scale-105 transition duration-300 shadow-[0_0_40px_-10px_rgba(74,222,128,0.5)] group">
+                        <i class="fa-brands fa-google-play text-xl"></i> 
+                        <span class="text-lg">Google Play</span>
+                    </a>
+                    
+                    <div class="bg-surface/50 backdrop-blur-md border border-white/10 text-gray-400 px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 cursor-not-allowed opacity-60">
+                        <i class="fa-brands fa-apple text-xl"></i> 
+                        <div class="flex flex-col items-start leading-none text-left">
+                            <span class="text-[10px] uppercase tracking-wide font-bold opacity-70">iOS App Store</span>
+                            <span class="text-sm">Coming Soon</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative flex justify-center lg:justify-end animate-fade-up perspective-1000 pointer-events-auto" style="animation-delay: 0.1s;">
+                <div id="hero-phone" class="phone-mockup w-72 md:w-80 border-gray-800 rotate-[-6deg] z-10 animate-float">
+                    <img src="main_screen_habitshow.jpg" class="w-full h-auto" alt="Dashboard">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent pointer-events-none"></div>
+                </div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand/10 blur-[100px] rounded-full pointer-events-none"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="border-y border-white/5 bg-black/40 backdrop-blur-sm py-5 overflow-hidden relative z-20">
+        <div class="inline-flex animate-scroll whitespace-nowrap">
+            <span class="mx-10 text-xs font-black text-gray-600 tracking-[0.3em] hover:text-brand transition duration-300 cursor-default"><i class="fa-solid fa-fire text-habitOrange mr-3"></i>SQUADS</span>
+            <span class="mx-10 text-xs font-black text-gray-600 tracking-[0.3em] hover:text-brand transition duration-300 cursor-default"><i class="fa-solid fa-fire text-habitBlue mr-3"></i>HEATMAPS</span>
+            <span class="mx-10 text-xs font-black text-gray-600 tracking-[0.3em] hover:text-brand transition duration-300 cursor-default"><i class="fa-solid fa-fire text-habitPurple mr-3"></i>WIDGETS</span>
+            <span class="mx-10 text-xs font-black text-gray-600 tracking-[0.3em] hover:text-brand transition duration-300 cursor-default"><i class="fa-solid fa-fire text-habitPink mr-3"></i>NO ADS</span>
+            <span class="mx-10 text-xs font-black text-gray-600 tracking-[0.3em] hover:text-brand transition duration-300 cursor-default"><i class="fa-solid fa-fire text-habitOrange mr-3"></i>SQUADS</span>
+            <span class="mx-10 text-xs font-black text-gray-600 tracking-[0.3em] hover:text-brand transition duration-300 cursor-default"><i class="fa-solid fa-fire text-habitBlue mr-3"></i>HEATMAPS</span>
+            <span class="mx-10 text-xs font-black text-gray-600 tracking-[0.3em] hover:text-brand transition duration-300 cursor-default"><i class="fa-solid fa-fire text-habitPurple mr-3"></i>WIDGETS</span>
+            <span class="mx-10 text-xs font-black text-gray-600 tracking-[0.3em] hover:text-brand transition duration-300 cursor-default"><i class="fa-solid fa-fire text-habitPink mr-3"></i>NO ADS</span>
+        </div>
+    </div>
+
+    <section id="features" class="max-w-6xl mx-auto px-6 py-32 relative z-20">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div class="md:col-span-2 bg-surface/30 backdrop-blur-md rounded-[2.5rem] p-10 relative overflow-hidden border border-white/5 group hover:border-habitPurple/50 transition duration-500">
+                <div class="absolute -inset-full top-0 block h-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shine"></div>
+                <div class="relative z-10 max-w-sm">
+                    <div class="w-14 h-14 bg-habitPurple/10 text-habitPurple rounded-2xl flex items-center justify-center mb-6 border border-habitPurple/20">
+                        <i class="fa-solid fa-bell text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-3">Aggressive Nudges</h3>
+                    <p class="text-gray-400 text-base leading-relaxed">
+                        Friend didn't log their habit? Send a <span class="text-habitPurple font-bold">"Brutal"</span> or <span class="text-habitPink font-bold">"Romantic"</span> nudge. Shame them into action.
+                    </p>
+                </div>
+                <div class="absolute -bottom-20 -right-20 w-72 rotate-[-12deg] group-hover:rotate-0 group-hover:translate-y-4 transition duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]">
+                    <div class="phone-mockup border-gray-700 shadow-2xl">
+                        <img src="nudge_habitshow.jpg" class="w-full" alt="Nudge">
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-1 md:row-span-2 bg-surface/30 backdrop-blur-md rounded-[2.5rem] p-8 relative overflow-hidden border border-white/5 group hover:border-habitBlue/50 transition duration-500 flex flex-col">
+                <div class="relative z-10 mb-8">
+                    <div class="w-14 h-14 bg-habitBlue/10 text-habitBlue rounded-2xl flex items-center justify-center mb-6 border border-habitBlue/20">
+                        <i class="fa-solid fa-chart-simple text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Proof of Work</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Visualize your consistency. Track Total Check-ins and optimize your routine.
+                    </p>
+                </div>
+                <div class="mt-auto self-center translate-y-12 group-hover:translate-y-4 transition duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]">
+                    <div class="phone-mockup w-56 border-gray-700 shadow-2xl">
+                        <img src="analytics_habitshow.jpg" class="w-full" alt="Analytics">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-surface to-[#0f172a] rounded-[2.5rem] p-8 border border-white/5 flex flex-col justify-between group hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.2)] transition duration-500 hover:border-habitOrange/30">
+                <div>
+                    <h3 class="text-xl font-bold mb-1">Home Screen Widgets</h3>
+                    <p class="text-gray-400 text-xs">Don't open the app. Just see the grid.</p>
+                </div>
+                <div class="mt-8 flex justify-center opacity-70 group-hover:opacity-100 transition duration-500 scale-95 group-hover:scale-105">
+                    <div class="w-full h-32 bg-black rounded-2xl p-4 grid grid-cols-7 gap-2 border border-white/10 shadow-lg">
+                        <div class="bg-brand/20 rounded-md"></div><div class="bg-brand rounded-md"></div><div class="bg-brand rounded-md shadow-[0_0_8px_#4ade80]"></div><div class="bg-brand rounded-md"></div><div class="bg-brand/20 rounded-md"></div><div class="bg-brand rounded-md"></div><div class="bg-brand rounded-md"></div>
+                        <div class="bg-brand rounded-md"></div><div class="bg-brand rounded-md shadow-[0_0_8px_#4ade80]"></div><div class="bg-brand/20 rounded-md"></div><div class="bg-brand rounded-md"></div><div class="bg-brand rounded-md"></div><div class="bg-brand rounded-md"></div><div class="bg-brand/20 rounded-md"></div>
+                        <div class="bg-brand/20 rounded-md"></div><div class="bg-brand rounded-md"></div><div class="bg-brand rounded-md"></div><div class="bg-brand rounded-md"></div><div class="bg-brand/20 rounded-md"></div><div class="bg-brand rounded-md"></div><div class="bg-brand rounded-md shadow-[0_0_8px_#4ade80]"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-surface/30 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/5 flex items-center justify-between group hover:bg-white/5 transition duration-300 cursor-default hover:border-habitTeal/30">
+                <div>
+                    <h3 class="text-xl font-bold mb-1">Privacy First</h3>
+                    <p class="text-gray-400 text-xs">No ads. No tracking. <br>Your data is yours.</p>
+                </div>
+                <div class="w-14 h-14 bg-white/5 rounded-full flex items-center justify-center text-habitTeal text-2xl group-hover:rotate-12 transition duration-300">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="reviews" class="max-w-6xl mx-auto px-6 pb-20 relative z-20">
+        <h3 class="text-center text-xs font-black text-gray-600 uppercase tracking-[0.3em] mb-12">Trusted by the Obsessed</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div class="bg-white/[0.02] p-8 rounded-3xl border border-white/5 hover:border-brand/30 hover:bg-white/[0.04] transition duration-300 flex flex-col justify-between">
+                <div>
+                    <div class="flex text-brand text-[10px] mb-4 gap-1"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p class="text-gray-300 text-sm mb-6 leading-relaxed">"The only thing that gets me to the gym is knowing my friends will see an empty square on my profile. It's brutal but effective."</p>
+                </div>
+                <div class="flex items-center gap-3 border-t border-white/5 pt-4">
+                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-xl">👻</div>
+                    <div>
+                        <div class="font-bold text-white text-sm">Marcus Chen</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-wider">Software Engineer</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white/[0.02] p-8 rounded-3xl border border-white/5 hover:border-brand/30 hover:bg-white/[0.04] transition duration-300 flex flex-col justify-between">
+                <div>
+                    <div class="flex text-brand text-[10px] mb-4 gap-1"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p class="text-gray-300 text-sm mb-6 leading-relaxed">"I've tried every habit tracker. HabitShow is the only one that stuck because the UI is so clean and the widgets are motivating."</p>
+                </div>
+                <div class="flex items-center gap-3 border-t border-white/5 pt-4">
+                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-xl">👩‍🚀</div>
+                    <div>
+                        <div class="font-bold text-white text-sm">Sarah Vance</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-wider">Medical Student</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white/[0.02] p-8 rounded-3xl border border-white/5 hover:border-brand/30 hover:bg-white/[0.04] transition duration-300 flex flex-col justify-between">
+                <div>
+                    <div class="flex text-brand text-[10px] mb-4 gap-1"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p class="text-gray-300 text-sm mb-6 leading-relaxed">"My girlfriend sends me 'Romantic' nudges when I forget to drink water. It's hilarious and it actually works."</p>
+                </div>
+                <div class="flex items-center gap-3 border-t border-white/5 pt-4">
+                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-xl">🤖</div>
+                    <div>
+                        <div class="font-bold text-white text-sm">David K.</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-wider">Indie Founder</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-6 pb-24 relative z-20 border-t border-white/5 pt-20">
+        <h3 class="text-center text-xs font-black text-gray-600 uppercase tracking-[0.3em] mb-16">System Specifications</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div class="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-habitPurple/30 hover:bg-white/[0.04] transition-all">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-habitPurple/10 flex items-center justify-center text-habitPurple"><i class="fa-solid fa-bolt text-sm"></i></div>
+                    <h4 class="font-bold text-white">Nudging</h4>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed pl-1">Send real-time alerts to friends who break their streak.</p>
+            </div>
+
+            <div class="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-habitPink/30 hover:bg-white/[0.04] transition-all">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-habitPink/10 flex items-center justify-center text-habitPink"><i class="fa-solid fa-heart text-sm"></i></div>
+                    <h4 class="font-bold text-white">Praising</h4>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed pl-1">Boost morale with instant reactions to completed habits.</p>
+            </div>
+
+            <div class="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-habitOrange/30 hover:bg-white/[0.04] transition-all">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-habitOrange/10 flex items-center justify-center text-habitOrange"><i class="fa-solid fa-table-cells text-sm"></i></div>
+                    <h4 class="font-bold text-white">Widgets</h4>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed pl-1">Check your heatmaps without opening the app.</p>
+            </div>
+
+            <div class="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-brand/30 hover:bg-white/[0.04] transition-all">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center text-brand"><i class="fa-solid fa-users text-sm"></i></div>
+                    <h4 class="font-bold text-white">Squads</h4>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed pl-1">Compete with friends on shared leaderboards.</p>
+            </div>
+
+            <div class="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-habitBlue/30 hover:bg-white/[0.04] transition-all">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-habitBlue/10 flex items-center justify-center text-habitBlue"><i class="fa-solid fa-user text-sm"></i></div>
+                    <h4 class="font-bold text-white">Solo Habits</h4>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed pl-1">Keep personal goals hidden from your public profile.</p>
+            </div>
+
+            <div class="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-habitTeal/30 hover:bg-white/[0.04] transition-all">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-habitTeal/10 flex items-center justify-center text-habitTeal"><i class="fa-solid fa-chart-line text-sm"></i></div>
+                    <h4 class="font-bold text-white">Analytics</h4>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed pl-1">Visualize completion rates and peak performance hours.</p>
+            </div>
+
+            <div class="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-[#6366F1]/30 hover:bg-white/[0.04] transition-all">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-[#6366F1]/10 flex items-center justify-center text-[#6366F1]"><i class="fa-solid fa-clock text-sm"></i></div>
+                    <h4 class="font-bold text-white">Reminders</h4>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed pl-1">Custom notifications to ensure you never miss a rep.</p>
+            </div>
+
+            <div class="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-habitOrange/30 hover:bg-white/[0.04] transition-all">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-habitOrange/10 flex items-center justify-center text-habitOrange"><i class="fa-solid fa-share-nodes text-sm"></i></div>
+                    <h4 class="font-bold text-white">Quick Invite</h4>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed pl-1">Onboard your entire friend group in seconds.</p>
+            </div>
+
+            <div class="group p-6 rounded-2xl bg-white/[0.01] border border-white/5 opacity-60">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-gray-400"><i class="fa-solid fa-gem text-sm"></i></div>
+                    <h4 class="font-bold text-gray-400">Clubs (Soon)</h4>
+                </div>
+                <p class="text-xs text-gray-500 leading-relaxed pl-1">Join massive communities for large-scale challenges.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="border-t border-white/5 bg-[#020617] py-16 text-center" id="download">
+        <h2 class="text-4xl font-extrabold mb-8 text-white tracking-tight">Ready to start?</h2>
+        
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-12 px-6">
+            <a href="https://play.google.com/store/apps/details?id=com.habitshow.app" target="_blank" class="bg-brand hover:bg-white text-black px-8 py-4 rounded-full font-bold transition transform hover:-translate-y-1 shadow-[0_0_30px_-5px_rgba(74,222,128,0.4)] flex items-center justify-center gap-3 text-lg">
+                <i class="fa-brands fa-google-play"></i>
+                <span>Download on Android</span>
+            </a>
+            
+            <button class="bg-white/5 border border-white/10 text-gray-500 px-8 py-4 rounded-full font-bold flex items-center justify-center gap-3 cursor-not-allowed text-lg">
+                <i class="fa-brands fa-apple"></i>
+                <span>iOS (Very Soon)</span>
+            </button>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-8 font-bold text-sm text-gray-500">
+            <a href="https://youtube.com/@eraysona" target="_blank" class="hover:text-red-500 transition flex items-center gap-2">
+                <i class="fa-brands fa-youtube"></i> YouTube
+            </a>
+            <a href="https://eraysona.substack.com" target="_blank" class="hover:text-habitOrange transition flex items-center gap-2">
+                <i class="fa-solid fa-newspaper"></i> Blog
+            </a>
+            <a href="https://eraysona.com" target="_blank" class="hover:text-brand transition flex items-center gap-2">
+                <i class="fa-solid fa-globe"></i> Website
+            </a>
+        </div>
+        <p class="text-[10px] text-gray-700 mt-8">&copy; 2026 HabitShow.</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('hero-canvas');
+        const heroSection = document.getElementById('hero-section'); 
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let cells = [];
+        const cellSize = 30; 
+        
+        let mouse = { x: -1000, y: -1000 }; 
+
+        function resize() {
+            const rect = heroSection.getBoundingClientRect();
+            width = rect.width;
+            height = rect.height;
+            canvas.width = width;
+            canvas.height = height;
+            initCells();
+        }
+
+        class Cell {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.intensity = 0; 
+                this.decay = 0.01 + Math.random() * 0.02; 
+            }
+
+            update() {
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                // CAP at 0.6 intensity (60%)
+                if (distance < 100) {
+                    this.intensity = Math.min(this.intensity + 0.2, 0.6);
+                }
+
+                if (this.intensity > 0) {
+                    this.intensity -= this.decay;
+                    if (this.intensity < 0) this.intensity = 0;
+                }
+            }
+
+            draw() {
+                if (this.intensity <= 0.01) {
+                    ctx.fillStyle = '#020617'; 
+                    ctx.fillRect(this.x, this.y, cellSize - 1, cellSize - 1); 
+                } else {
+                    let r, g, b;
+                    
+                    // Adjusted mapping: Only Green tones, no white hot
+                    if (this.intensity > 0.5) {
+                        r = 74; g = 222; b = 128; // Brand
+                    } else {
+                        // Fading to Dark Green
+                        r = 20; g = 80 + (this.intensity * 200); b = 40;
+                    }
+                    
+                    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.intensity})`;
+                    
+                    // Reduced glow threshold
+                    if (this.intensity > 0.4) {
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = '#4ADE80';
+                    } else {
+                        ctx.shadowBlur = 0;
+                    }
+                    
+                    ctx.fillRect(this.x, this.y, cellSize - 1, cellSize - 1);
+                    ctx.shadowBlur = 0; 
+                }
+            }
+        }
+
+        function initCells() {
+            cells = [];
+            for (let y = 0; y < height; y += cellSize) {
+                for (let x = 0; x < width; x += cellSize) {
+                    cells.push(new Cell(x, y));
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = '#020617'; 
+            ctx.fillRect(0, 0, width, height);
+
+            cells.forEach(cell => {
+                cell.update();
+                cell.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+        
+        document.addEventListener('mousemove', (e) => {
+            const rect = heroSection.getBoundingClientRect();
+            if (e.clientX >= rect.left && e.clientX <= rect.right && 
+                e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                mouse.x = e.clientX - rect.left;
+                mouse.y = e.clientY - rect.top;
+            } else {
+                 mouse.x = -1000;
+                 mouse.y = -1000;
+            }
+        });
+        
+        window.addEventListener('touchmove', (e) => {
+            const rect = heroSection.getBoundingClientRect();
+            mouse.x = e.touches[0].clientX - rect.left;
+            mouse.y = e.touches[0].clientY - rect.top;
+        });
+
+        resize();
+        animate();
+
+        const phone = document.getElementById('hero-phone');
+        document.addEventListener('mousemove', (e) => {
+            if (window.innerWidth < 1024) return; 
+            const x = (window.innerWidth - e.pageX) / 50;
+            const y = (window.innerHeight - e.pageY) / 50;
+            phone.style.transform = `rotate(-6deg) rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+
+    </script>
+</body>
+</html>

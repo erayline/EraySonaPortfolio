@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Infinite Learning Protocol | Eray Sona</title>
-    <link rel="icon" type="image/png" href="favicon.ico">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -259,9 +259,11 @@
         .mock-folder { display: flex; align-items: center; gap: 10px; color: #64748b; font-size: 0.8rem; font-family: var(--font-mono); }
         .mock-folder.active { color: #a78bfa; background: rgba(167, 139, 250, 0.1); padding: 4px 8px; border-radius: 4px; }
         
-        .mock-cal { background: white; flex-grow: 1; padding: 15px; display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; align-content: center; }
-        .mock-day { aspect-ratio: 1; background: #f1f5f9; border-radius: 2px; }
-        .mock-day.done { background: #10b981; }
+        /* New Mock List for Shadow Skills */
+        .mock-list { background: white; flex-grow: 1; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .mock-list-item { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 0.75rem; color: #334155; }
+        .mock-checkbox { width: 14px; height: 14px; border: 2px solid #cbd5e1; border-radius: 3px; }
+        .mock-checkbox.checked { background: #10b981; border-color: #10b981; }
 
         /* --- GUARANTEE BOX (NEW) --- */
         .guarantee-box {
@@ -421,7 +423,6 @@
             
             <h1>Stop Studying.<br>Start <span style="color: var(--brand);">Architecting</span> Your Brain.</h1>
             <p>The engineering-grade system to master Code, Math, and Design without burnout.</p>
-            <p><i>FOREVER ACCESS</i></p>
             
             <div style="margin: 3rem 0;">
                 <a href="#pricing" 
@@ -469,6 +470,7 @@
                 <span style="background: #eff6ff; color: #2563eb; font-weight: 700; font-size: 0.8rem; padding: 6px 16px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #dbeafe;">
                     📦 Complete Bundle Access
                 </span>
+                
                 <h2 style="font-size: 2.5rem; margin: 20px 0 10px;">Here Is Exactly What You Get</h2>
                 <div style="font-size: 1.2rem; color: var(--text-muted);">
                     Total Value: <span style="text-decoration: line-through; opacity: 0.6; margin-right: 8px;">$357</span>
@@ -581,13 +583,21 @@
 
                         <div class="peek-card peek-sub">
                             <div class="peek-header">
-                                <span class="mono" style="font-size: 0.8rem; color: #64748b;">90_Day_Map.csv</span>
+                                <span class="mono" style="font-size: 0.8rem; color: #64748b;">shadow_skills.md</span>
                             </div>
-                            <div class="mock-cal">
-                                <div class="mock-day done"></div><div class="mock-day done"></div><div class="mock-day done"></div><div class="mock-day done"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div>
-                                <div class="mock-day done"></div><div class="mock-day done"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div>
-                                <div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div>
-                                <div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div><div class="mock-day"></div>
+                            <div class="mock-list">
+                                <div class="mock-list-item">
+                                    <div class="mock-checkbox checked"></div> [ ] Micro-Expressions
+                                </div>
+                                <div class="mock-list-item">
+                                    <div class="mock-checkbox checked"></div> [ ] Social Engineering
+                                </div>
+                                <div class="mock-list-item">
+                                    <div class="mock-checkbox checked"></div> [ ] Crisis Negotiation
+                                </div>
+                                <div class="mock-list-item">
+                                    <div class="mock-checkbox"></div> [ ] Cold Reading
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -655,12 +665,12 @@
                 <div class="bonus-card reveal" style="transition-delay: 0.2s;">
                     <div class="bonus-tag">FREE</div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                        <span data-feather="calendar" style="width: 32px; height: 32px; color: var(--text-main);"></span>
+                        <span data-feather="list" style="width: 32px; height: 32px; color: var(--text-main);"></span>
                         <span class="mono" style="color: var(--text-muted); text-decoration: line-through;">$57.00</span>
                     </div>
-                    <h4>90-Day Skill Mastery Calendar (SOON)</h4>
+                    <h4>The "MUST Know Skills" + ALL The Skills Fast-List </h4>
                     <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;">
-                        A printable PDF and Markdown calendar with daily tasks. Keeps you accountable for 3 months of deep learning.
+                        A rapid-fire checklist of high-leverage skills schools ignore: Body Language Decoding, Tactical Empathy, Negotiation, and Social Dynamics.
                     </p>
                 </div>
 
@@ -705,7 +715,7 @@
                 <span>$0.00 <span style="text-decoration: line-through; opacity: 0.5;">$47</span></span>
             </div>
             <div class="receipt-line">
-                <span>Bonus: 90-Day Calendar</span>
+                <span>Bonus: Shadow Skills List</span>
                 <span>$0.00 <span style="text-decoration: line-through; opacity: 0.5;">$57</span></span>
             </div>
             <div class="receipt-line">
