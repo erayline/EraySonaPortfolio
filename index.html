@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERAY SONA | Intellectual Capital</title>
+    <title>ERAY SONA | Performance Architecture</title>
     <link rel="icon" type="image/jpg" href="pp.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800;900&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -20,60 +20,79 @@
                         mono: ['"JetBrains Mono"', 'monospace'],
                     },
                     colors: {
-                        'bg-core': '#F8FAFC', /* Slightly cooler, cleaner slate-white */
+                        'bg-core': '#F8FAFC', 
                         'ink-heavy': '#0F172A',
                         'ink-medium': '#334155',
                         'ink-light': '#64748B',
                         'accent-blue': '#2563EB',
                         'accent-green': '#16A34A',
                         'accent-yellow': '#EAB308',
-                        'ui-border': '#CBD5E1',
+                        'ui-border': '#0F172A',
                     },
                     boxShadow: {
                         'card': '4px 4px 0px 0px #0F172A',
                         'card-hover': '0px 0px 0px 0px #0F172A',
                         'btn': '2px 2px 0px 0px #0F172A',
                         'btn-hover': '0px 0px 0px 0px #0F172A',
+                        'sticker': '3px 3px 0px 0px #0F172A',
                     }
                 }
             }
         }
     </script>
+
+    <style>
+        /* This stabilizes the image rendering to prevent sub-pixel jitter */
+        .stable-image {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0); /* Hardware acceleration */
+            image-rendering: -webkit-optimize-contrast;
+        }
+    </style>
 </head>
 
-<body class="bg-bg-core text-ink-heavy antialiased selection:bg-accent-blue selection:text-white min-h-screen flex flex-col items-center py-16 px-4 sm:px-6">
+<body class="bg-bg-core text-ink-heavy antialiased selection:bg-ink-heavy selection:text-white min-h-screen flex flex-col items-center pb-24 relative overflow-x-hidden">
 
-    <header class="w-full max-w-lg mb-14 flex flex-col items-center text-center">
-        <h1 class="font-sans font-black text-4xl sm:text-5xl tracking-tight uppercase text-ink-heavy leading-none mb-3">
+    <div class="w-full bg-ink-heavy text-white py-2.5 flex justify-center items-center px-4 z-50 relative">
+        <span class="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-widest flex items-center gap-2">
+            <span class="w-1.5 h-1.5 bg-accent-green rounded-full animate-pulse"></span>
+            Engineering Clarity for 5,421+ High-Performers
+        </span>
+    </div>
+
+    <header class="w-full max-w-lg mt-16 mb-16 flex flex-col items-center text-center px-4 sm:px-6">
+        <h1 class="font-sans font-black text-4xl sm:text-5xl tracking-tight uppercase text-ink-heavy leading-none mb-4">
             Eray Sona
         </h1>
-        <p class="font-mono text-[11px] font-bold uppercase tracking-widest text-ink-light">
-            Cognitive Systems & Software
+        <p class="font-sans text-sm font-medium text-ink-medium leading-relaxed max-w-sm">
+            Strict cognitive frameworks and high-fidelity tracking software for individuals obsessed with output.
         </p>
     </header>
 
-    <main class="w-full max-w-lg flex flex-col gap-10 pb-24">
+    <main class="w-full max-w-lg flex flex-col gap-16 px-4 sm:px-6 relative z-10">
 
-        <a href="metaebooklanding.html" class="group block w-full bg-white border-2 border-ink-heavy shadow-card hover:shadow-card-hover hover:translate-y-[4px] hover:translate-x-[4px] transition-all duration-150 ease-out flex flex-col relative">
+        <a href="metaebooklanding.html" class="group block w-full bg-white border-2 border-ui-border shadow-card hover:shadow-card-hover hover:border-accent-blue hover:translate-y-[4px] hover:translate-x-[4px] transition-all duration-200 ease-out flex flex-col relative">
             
-            <div class="w-full border-b-2 border-ink-heavy bg-slate-50 relative overflow-hidden">
-                <div class="absolute top-3 right-3 z-10">
-                    <span class="bg-ink-heavy text-white font-mono text-[10px] font-bold px-2.5 py-1 rounded-[2px] uppercase shadow-sm tracking-widest">
-                        Launch Discount
-                    </span>
-                </div>
-                <img src="ebook-metalearning.png" alt="Meta-Learning System" class="w-full h-auto block grayscale-[10%] group-hover:grayscale-0 transition-all duration-300">
+            <div class="absolute -top-4 -right-3 sm:-right-6 z-20 transform rotate-2 group-hover:rotate-3 transition-transform duration-200">
+                <span class="block bg-ink-heavy text-white font-mono text-[11px] font-black px-4 py-2 uppercase shadow-sticker border-2 border-ink-heavy tracking-widest flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-accent-yellow" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    Launch Discount
+                </span>
+            </div>
+
+            <div class="w-full border-b-2 border-ui-border bg-slate-50 relative overflow-hidden">
+                <img src="ebook-metalearning.png" alt="Meta-Learning System" class="stable-image w-full h-auto block grayscale-[10%] group-hover:grayscale-0 transition-[filter] duration-300 transform-gpu">
             </div>
 
             <div class="p-6 sm:p-7 bg-white flex flex-col flex-grow gap-5">
-                
                 <div class="flex justify-between items-start gap-4 border-b border-slate-100 pb-4">
-                    <h2 class="font-sans font-black text-2xl tracking-tight uppercase leading-[1.1] group-hover:text-accent-blue transition-colors">
+                    <h2 class="font-sans font-black text-2xl tracking-tight uppercase leading-[1.1] group-hover:text-accent-blue transition-colors mt-0.5">
                         The Meta-Learning<br>Protocol
                     </h2>
-                    <div class="flex flex-col items-end shrink-0 font-mono mt-1">
+                    <div class="flex flex-col items-end shrink-0 font-mono mt-0.5">
                         <span class="text-[11px] font-bold text-ink-light line-through mb-0.5">$42.99</span>
-                        <span class="text-[16px] font-black text-accent-blue leading-none">$29.99</span>
+                        <span class="text-[18px] font-black text-accent-blue leading-none">$29.99</span>
                     </div>
                 </div>
 
@@ -90,103 +109,109 @@
                             <svg class="w-5 h-5 text-accent-blue shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                             Eradicate procrastination via cognitive framing.
                         </li>
-                        <li class="flex items-start gap-2.5">
-                            <svg class="w-5 h-5 text-accent-blue shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                            Systematically compound intellectual capital.
-                        </li>
                     </ul>
                 </div>
 
                 <div class="mt-4 flex justify-between items-end">
-                    <span class="font-mono text-[10px] font-bold uppercase text-ink-light flex items-center gap-1.5">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    <span class="font-mono text-[10px] font-bold uppercase text-ink-heavy flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                         Instant Access
                     </span>
-                    <div class="inline-flex items-center gap-2 border-2 border-ink-heavy bg-white text-ink-heavy px-4 py-2.5 font-mono text-xs font-bold uppercase shadow-btn group-hover:shadow-btn-hover group-hover:translate-y-[2px] group-hover:translate-x-[2px] group-hover:bg-accent-blue group-hover:text-white group-hover:border-accent-blue transition-all">
-                        Learn more 
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    <div class="inline-flex items-center gap-2 border-2 border-ui-border bg-white text-ink-heavy px-4 py-2.5 font-mono text-[13px] font-bold uppercase shadow-btn group-hover:shadow-btn-hover group-hover:translate-y-[2px] group-hover:translate-x-[2px] group-hover:bg-accent-blue group-hover:text-white group-hover:border-accent-blue transition-all">
+                        Get It Now
+                        <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </div>
                 </div>
             </div>
         </a>
 
-        <a href="http://eraysona.com/habitshow.html" class="group block w-full bg-white border-2 border-ink-heavy shadow-card hover:shadow-card-hover hover:translate-y-[4px] hover:translate-x-[4px] transition-all duration-150 ease-out flex flex-col">
+        <a href="http://eraysona.com/habitshow.html" class="group block w-full bg-white border-2 border-ui-border shadow-card hover:shadow-card-hover hover:border-accent-green hover:translate-y-[4px] hover:translate-x-[4px] transition-all duration-200 ease-out flex flex-col relative">
             
-            <div class="w-full border-b-2 border-ink-heavy bg-slate-50 relative overflow-hidden">
-                <div class="absolute top-3 right-3 z-10">
-                    <span class="bg-white border-2 border-ink-heavy text-ink-heavy font-mono text-[10px] font-bold px-2.5 py-1 rounded-[2px] uppercase shadow-sm tracking-widest">
-                        Free
-                    </span>
-                </div>
-                <img src="habit_tracker.jpeg" alt="HabitShow Interface" class="w-full h-auto block grayscale-[10%] group-hover:grayscale-0 transition-all duration-300">
+            <div class="absolute -top-4 -right-3 sm:-right-6 z-20 transform -rotate-2 group-hover:-rotate-3 transition-transform duration-200">
+                <span class="block bg-white text-ink-heavy font-mono text-[11px] font-black px-5 py-2 uppercase shadow-sticker border-2 border-ink-heavy tracking-widest">
+                    Free Forever
+                </span>
+            </div>
+
+            <div class="w-full border-b-2 border-ui-border bg-slate-50 relative overflow-hidden">
+                <img src="habit_tracker.jpeg" alt="HabitShow Interface" class="stable-image w-full h-auto block grayscale-[10%] group-hover:grayscale-0 transition-[filter] duration-300 transform-gpu">
             </div>
 
             <div class="p-6 sm:p-7 bg-white flex flex-col flex-grow gap-4">
-                
                 <div class="flex justify-between items-start gap-4">
-                    <h2 class="font-sans font-black text-2xl tracking-tight uppercase leading-none group-hover:text-accent-green transition-colors mt-1">
+                    <h2 class="font-sans font-black text-2xl tracking-tight uppercase leading-none group-hover:text-accent-green transition-colors mt-0.5">
                         HabitShow
                     </h2>
-                    <div class="flex items-center shrink-0 font-mono mt-1">
-                        <span class="flex items-center gap-1.5 text-[12px] font-bold uppercase text-accent-green bg-green-50 px-2 py-1 rounded-[2px] border border-green-200">
-                            <span class="w-1.5 h-1.5 bg-accent-green rounded-full animate-pulse"></span>Live Status
+                    <div class="flex items-center shrink-0 font-mono mt-0.5">
+                        <span class="flex items-center gap-1.5 text-[12px] font-bold uppercase text-accent-green bg-green-50 px-2.5 py-1 rounded-[2px] border border-green-200 shadow-sm">
+                            <span class="w-1.5 h-1.5 bg-accent-green rounded-full animate-pulse"></span>Active
                         </span>
                     </div>
                 </div>
 
                 <p class="font-sans text-sm font-medium text-ink-medium leading-relaxed pr-4">
-                    Engineered for obsessive behavioral adherence. A high-fidelity tracking interface designed to eradicate UI friction and force daily execution.
+                    High-fidelity tracking interface designed to eradicate behavioral friction and force daily execution through strict cognitive control.
                 </p>
 
                 <div class="mt-4 flex justify-between items-end">
-                    <span class="font-mono text-[10px] font-bold uppercase text-ink-light">No Account Required</span>
-                    <div class="inline-flex items-center gap-2 border-2 border-ink-heavy bg-white text-ink-heavy px-4 py-2.5 font-mono text-xs font-bold uppercase shadow-btn group-hover:shadow-btn-hover group-hover:translate-y-[2px] group-hover:translate-x-[2px] group-hover:bg-accent-green group-hover:text-white group-hover:border-accent-green transition-all">
-                        Check it out
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    <span class="font-mono text-[10px] font-bold uppercase text-ink-light flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Start Instantly
+                    </span>
+                    <div class="inline-flex items-center gap-2 border-2 border-ui-border bg-white text-ink-heavy px-4 py-2.5 font-mono text-[13px] font-bold uppercase shadow-btn group-hover:shadow-btn-hover group-hover:translate-y-[2px] group-hover:translate-x-[2px] group-hover:bg-accent-green group-hover:text-white group-hover:border-accent-green transition-all">
+                        Launch App
+                        <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </div>
                 </div>
             </div>
         </a>
 
-        <a href="https://eraysona.substack.com/" class="group block w-full bg-white border-2 border-ink-heavy shadow-card hover:shadow-card-hover hover:translate-y-[4px] hover:translate-x-[4px] transition-all duration-150 ease-out flex flex-col">
+        <a href="https://eraysona.substack.com/" class="group block w-full bg-white border-2 border-ui-border shadow-card hover:shadow-card-hover hover:border-accent-yellow hover:translate-y-[4px] hover:translate-x-[4px] transition-all duration-200 ease-out flex flex-col relative">
             
-            <div class="w-full border-b-2 border-ink-heavy bg-slate-50 relative overflow-hidden">
-                <div class="absolute top-3 right-3 z-10">
-                    <span class="bg-accent-yellow border-2 border-ink-heavy text-ink-heavy font-mono text-[10px] font-bold px-2.5 py-1 rounded-[2px] uppercase shadow-sm tracking-widest">
-                        Free Forever
-                    </span>
-                </div>
-                <img src="heim.png" alt="The Meta Brain Publication" class="w-full h-auto block grayscale-[10%] group-hover:grayscale-0 transition-all duration-300">
+            <div class="absolute -top-4 -right-3 sm:-right-6 z-20 transform rotate-1 group-hover:rotate-2 transition-transform duration-200">
+                <span class="block bg-accent-yellow text-ink-heavy font-mono text-[11px] font-black px-5 py-2 uppercase shadow-sticker border-2 border-ink-heavy tracking-widest">
+                    Zero Cost
+                </span>
+            </div>
+
+            <div class="w-full border-b-2 border-ui-border bg-slate-50 relative overflow-hidden">
+                <img src="heim.png" alt="The Meta Brain Publication" class="stable-image w-full h-auto block grayscale-[10%] group-hover:grayscale-0 transition-[filter] duration-300 transform-gpu">
             </div>
 
             <div class="p-6 sm:p-7 bg-white flex flex-col flex-grow gap-4">
-                
                 <div class="flex justify-between items-start gap-4">
-                    <h2 class="font-sans font-black text-2xl tracking-tight uppercase leading-none group-hover:text-accent-yellow transition-colors mt-1">
+                    <h2 class="font-sans font-black text-2xl tracking-tight uppercase leading-none group-hover:text-yellow-600 transition-colors mt-0.5">
                         The Meta Brain
                     </h2>
-                    <div class="flex items-center shrink-0 font-mono mt-1">
-                        <span class="text-[12px] font-bold uppercase text-ink-light bg-slate-100 px-2 py-1 rounded-[2px]">
-                            5K+ Readers
+                    <div class="flex items-center shrink-0 font-mono mt-0.5">
+                        <span class="text-[12px] font-bold uppercase text-ink-heavy bg-slate-100 border border-ui-border px-2.5 py-1 rounded-[2px] shadow-sm">
+                            5,421 Readers
                         </span>
                     </div>
                 </div>
 
                 <p class="font-sans text-sm font-medium text-ink-medium leading-relaxed pr-4">
-                    Weekly teardowns of elite cognitive frameworks. Reverse-engineer behavioral systems, output optimization, and intellectual leverage.
+                    Weekly teardowns of elite cognitive frameworks. Reverse-engineer behavioral systems and output optimization.
                 </p>
 
                 <div class="mt-4 flex justify-between items-end">
-                    <span class="font-mono text-[10px] font-bold uppercase text-ink-light">Join the 1%</span>
-                    <div class="inline-flex items-center gap-2 border-2 border-ink-heavy bg-white text-ink-heavy px-4 py-2.5 font-mono text-xs font-bold uppercase shadow-btn group-hover:shadow-btn-hover group-hover:translate-y-[2px] group-hover:translate-x-[2px] group-hover:bg-accent-yellow group-hover:text-ink-heavy transition-all">
-                        See more
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    <span class="font-mono text-[10px] font-bold uppercase text-ink-light flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        Weekly Signal
+                    </span>
+                    <div class="inline-flex items-center gap-2 border-2 border-ui-border bg-white text-ink-heavy px-4 py-2.5 font-mono text-[13px] font-bold uppercase shadow-btn group-hover:shadow-btn-hover group-hover:translate-y-[2px] group-hover:translate-x-[2px] group-hover:bg-accent-yellow group-hover:text-ink-heavy transition-all">
+                        Read More
+                        <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </div>
                 </div>
             </div>
         </a>
 
     </main>
+
+    <footer class="mt-24 font-mono text-[10px] font-bold uppercase text-ink-light tracking-widest text-center">
+        © 2026 Eray Sona · Systems for the Obsessed
+    </footer>
 
 </body>
 </html>
